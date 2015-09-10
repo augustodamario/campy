@@ -10,7 +10,6 @@ config= Configurator()
 config.include("pyramid_jinja2")
 config.add_jinja2_renderer(".html")
 config.add_jinja2_search_path("templates", name=".html")
-config.add_route("home", "/")
-config.scan("campy")
+config.include("campy.views")
 
 app= config.make_wsgi_app()
