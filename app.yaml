@@ -1,0 +1,17 @@
+application: cam-ar
+version: 1
+
+runtime: python27
+api_version: 1
+
+threadsafe: yes
+
+handlers:
+- url: /css
+  static_dir: resources/css
+- url: /fonts
+  static_dir: resources/fonts
+- url: /js
+  static_dir: resources/js
+- url: .*
+  script: main.app
