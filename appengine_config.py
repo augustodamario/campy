@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding: utf-8
 """`appengine_config` gets loaded when starting a new application instance."""
 from google.appengine.ext import vendor
 

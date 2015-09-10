@@ -1,11 +1,46 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
-    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-    <title>CAM</title>
-  </head>
-  <body>
-    Hello {{name}}
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block section %}
+    Pacientes Recientes
+{% endblock %}
+
+{% block actions %}
+    <form class="form-inline" method="get" action="/paciente/nuevo">
+        <button type="submit" class="btn btn-default">Nuevo Paciente</button>
+    </form>
+{% endblock %}
+
+{% block body %}
+    <div class="container table-responsive">
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>NOMBRE</th>
+                    <th>APELLIDO</th>
+                    <th>FECHA NACIMIENTO</th>
+                    <th>CONTACTO</th>
+                    <th>ACCEDIDO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>[IMG]</td>
+                    <td>Karen</td>
+                    <td>Rodríguez</td>
+                    <td>14 Mar 1977<br/>38 años</td>
+                    <td>011 15 5567 3456<br/>karen.suarez@gmail.com</td>
+                    <td>14hs<br/>13/04/15</td>
+                </tr>
+                <tr>
+                    <td>[IMG]</td>
+                    <td>Patricia</td>
+                    <td>Oliviera</td>
+                    <td>14 Jul 1983<br/>29 años</td>
+                    <td>0322 15 5567 345<br/>patri.oliviera@yahoo.com.ar </td>
+                    <td>13hs<br/>13/04/15</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
