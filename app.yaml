@@ -15,3 +15,4 @@ handlers:
   static_dir: resources/js
 - url: .*
   script: main.app
+  login: required
