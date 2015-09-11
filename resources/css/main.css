@@ -1,0 +1,5 @@
+.section {margin:0; padding:10px 2%; background-color:#0ab4fd; color:#ffffff;}
+.actions {margin:5px 1%;}
+
+.table-hover thead th {background-color:#286090; color:#ffffff;}
+.table-hover tbody th, .table-hover tbody td {cursor:pointer;}

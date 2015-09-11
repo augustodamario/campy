@@ -5,12 +5,12 @@
 {% endblock %}
 
 {% block actions %}
-    <form class="form-inline" method="post">
-        <button type="button" class="btn" onclick="window.location.href = '/';">Cancelar</button>
-        <button type="submit" class="btn btn-default">Guardar</button>
-    </form>
+    <a class="btn btn-default btn-sm" href="/" role="button">Cancelar</a>
+    <a class="btn btn-primary btn-sm" href="#" role="button">Guardar</a>
 {% endblock %}
 
 {% block body %}
-    Agregando...
+    <div class="container">
+        Agregando...
+    </div>
 {% endblock %}

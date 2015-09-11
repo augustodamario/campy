@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block actions %}
-    <form class="form-inline" method="get" action="/paciente/nuevo">
-        <button type="submit" class="btn btn-default">Nuevo Paciente</button>
-    </form>
+    <a class="btn btn-primary btn-sm" href="/paciente/nuevo" role="button">Nuevo Paciente</a>
 {% endblock %}
 
 {% block body %}
@@ -25,7 +23,7 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>[IMG]</td>
+                    <td><img class="img-rounded" src="/img/avatar.jpg" alt=""/></td>
                     <td>Karen</td>
                     <td>Rodríguez</td>
                     <td>14 Mar 1977<br/>38 años</td>
@@ -33,7 +31,7 @@
                     <td>14hs<br/>13/04/15</td>
                 </tr>
                 <tr>
-                    <td>[IMG]</td>
+                    <td><img class="img-rounded" src="/img/avatar.jpg" alt=""/></td>
                     <td>Patricia</td>
                     <td>Oliviera</td>
                     <td>14 Jul 1983<br/>29 años</td>

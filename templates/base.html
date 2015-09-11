@@ -5,15 +5,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
+        <!--link type="text/css" rel="stylesheet" href="/css/bootstrap-theme.min.css"/-->
+        <link type="text/css" rel="stylesheet" href="/css/main.css"/>
         <script type="text/javascript" src="/js/jquery.min.js"></script>
         <script type="text/javascript" src="/js/bootstrap.min.js"></script>
         <title>CAM</title>
     </head>
     <body>
-        <div class="container-fluid">
-            <div>{% block section %}{% endblock %}</div>
-            <div class="text-right">{% block actions %}{% endblock %}</div>
-            {% block body %}{%endblock%}
+        <div class="section h3">
+            {% block section %}{% endblock %}
+            <a href="{{ logout_url }}">Salir</a>
         </div>
+        <div class="actions text-right">{% block actions %}{% endblock %}</div>
+        {% block body %}{%endblock%}
     </body>
 </html>
