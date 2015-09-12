@@ -1,5 +1,5 @@
 # coding: utf-8
-from security import exception
+from security import handle_exception
 from security import require_role
 from security import roles
 from security import UnauthorizedException
@@ -13,7 +13,7 @@ def includeme(config):
 
 
 @view_config(context=UnauthorizedException, renderer="unauthorized.html")
-@exception
+@handle_exception
 def unauthorized(ex, request):
     return {}
 

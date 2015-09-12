@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
-{% block section %}
+{% block section_title %}
     Pacientes Recientes
 {% endblock %}
 
-{% block actions %}
+{% block section_actions %}
     <a class="btn btn-primary btn-sm" href="/paciente/nuevo" role="button">Nuevo Paciente</a>
 {% endblock %}
 
-{% block body %}
-    <div class="container table-responsive">
+{% block section_body %}
+    <div class="table-responsive">
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>

@@ -3,24 +3,29 @@ from functools import wraps
 from google.appengine.api import users
 
 
-class Roles:
+class _Roles:
     ADVISOR = "advisor"
-roles = Roles
+roles = _Roles
 
 
 class UnauthorizedException(Exception):
     pass
 
 
-def get_roles(email):
-    if email in ["test@example.com", "julio.veronelli@crossknight.com.ar"]:
+def _get_roles(email):
+    test_users = [
+        "test@example.com",
+        "augustodamario@gmail.com",
+        "julio.veronelli@crossknight.com.ar",
+        "magoarcano@gmail.com"]
+    if email in test_users:
         return [roles.ADVISOR]
     return []
 
 
 def has_current_user_role(name):
     user = users.get_current_user()
-    return user and name in get_roles(user.email())
+    return user and name in _get_roles(user.email())
 
 
 def _add_logout_url(value):
@@ -41,7 +46,7 @@ def require_role(*names):
     return decorator
 
 
-def exception(f):
+def handle_exception(f):
     @wraps(f)
     def wrapper(ex, request):
         return _add_logout_url(f(ex, request))

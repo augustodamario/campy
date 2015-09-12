@@ -1,5 +1,8 @@
-.section {margin:0; padding:10px 2%; background-color:#0ab4fd; color:#ffffff;}
-.actions {margin:5px 1%;}
+.section-title {margin:0; padding:10px 2%; background-color:#0ab4fd; color:#ffffff;}
+.section-actions {margin:10px;}
+.section-actions-bottom {height:0.3em; background-color:#286090;}
+
+.logout.small {position:absolute; top:0; right:0; padding:15px 2% 0 0; color:#ffffff;}
 
 .table-hover thead th {background-color:#286090; color:#ffffff;}
 .table-hover tbody th, .table-hover tbody td {cursor:pointer;}
