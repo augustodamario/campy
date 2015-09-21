@@ -1,28 +1,13 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8"/>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css"/>
-        <link type="text/css" rel="stylesheet" href="/css/main.css"/>
-        <script type="text/javascript" src="/js/jquery.min.js"></script>
-        <script type="text/javascript" src="/js/bootstrap.min.js"></script>
-        <title>CAM</title>
-    </head>
-    <body>
-        <div class="section-title h3">
-            {% block section_title %}{% endblock %}
-            {% if logout_url %}
-                <a class="logout small" href="{{ logout_url }}">Salir</a>
-            {% endif %}
-        </div>
-        <div class="container">
-            <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
-        </div>
-        <div class="section-actions-bottom"></div>
-        <div class="container">
-            {% block section_body %}{%endblock%}
-        </div>
-    </body>
-</html>
+<div class="section-title h3">
+    {% block section_title %}{% endblock %}
+    {% if logout_url %}
+        <a class="logout small" href="{{ logout_url }}">Salir</a>
+    {% endif %}
+</div>
+<div class="container">
+    <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
+</div>
+<div class="section-actions-bottom"></div>
+<div class="container">
+    {% block section_body %}{%endblock%}
+</div>

@@ -7,14 +7,11 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /css
-  static_dir: resources/css
-- url: /fonts
-  static_dir: resources/fonts
-- url: /img
-  static_dir: resources/img
-- url: /js
-  static_dir: resources/js
-- url: .*
-  script: main.app
+- url: /
+  static_files: templates/index.html
+  upload: templates/index.html
   login: required
+- url: /resources
+  static_dir: resources
+- url: /.*
+  script: main.app

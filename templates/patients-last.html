@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block section_title %}
+    Pacientes Recientes
+{% endblock %}
+
+{% block section_actions %}
+    <a class="btn btn-primary btn-sm" ui-sref="patient-new" role="button">Nuevo Paciente</a>
+{% endblock %}
+
+{% block section_body %}
+    {% raw %}
+        <div class="table-responsive" ng-controller="PatientsLastController">
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>NOMBRE</th>
+                        <th>APELLIDO</th>
+                        <th>FECHA NACIMIENTO</th>
+                        <th>CONTACTO</th>
+                        <th>ACCEDIDO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="patient in patients">
+                        <td><img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/></td>
+                        <td>{{ patient.firstname }}</td>
+                        <td>{{ patient.surname }}</td>
+                        <td>{{ patient.birthdate }}<br/>{{ patient.age }} años</td>
+                        <td>{{ patient.cellphone }}<br/>{{ patient.email }}</td>
+                        <td>{{ patient.lastaccesseddate }}<br/>{{ patient.lastaccessedtime }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endraw %}
+{% endblock %}

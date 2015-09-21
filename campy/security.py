@@ -23,15 +23,29 @@ def _get_roles(email):
     return []
 
 
+def has_current_user_any_role():
+    user = users.get_current_user()
+    return user and _get_roles(user.email())
+
+
 def has_current_user_role(name):
     user = users.get_current_user()
     return user and name in _get_roles(user.email())
 
 
-def _add_logout_url(value):
+def add_logout_url(value):
     if isinstance(value, dict):
         value["logout_url"] = users.create_logout_url("/")
     return value
+
+
+def require_any_role(f):
+    @wraps(f)
+    def wrapper(request):
+        if has_current_user_any_role():
+            return add_logout_url(f(request))
+        raise UnauthorizedException
+    return wrapper
 
 
 def require_role(*names):
@@ -40,7 +54,7 @@ def require_role(*names):
         def wrapper(request):
             for name in names:
                 if has_current_user_role(name):
-                    return _add_logout_url(f(request))
+                    return add_logout_url(f(request))
             raise UnauthorizedException
         return wrapper
     return decorator
@@ -49,5 +63,5 @@ def require_role(*names):
 def handle_exception(f):
     @wraps(f)
     def wrapper(ex, request):
-        return _add_logout_url(f(ex, request))
+        return add_logout_url(f(ex, request))
     return wrapper
