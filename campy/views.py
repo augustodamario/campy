@@ -1,6 +1,8 @@
 # coding: utf-8
 from security import add_logout_url
 from security import handle_exception
+from security import handle_rest
+from security import handle_view
 from security import require_any_role
 from security import UnauthorizedException
 from pyramid.renderers import render
@@ -21,12 +23,15 @@ def unauthorized(ex, request):
 
 
 @view_config(route_name="templates")
+@handle_view
 @require_any_role
 def templates(request):
     return Response(render(request.matchdict["name"] + ".html", add_logout_url({}), request=request))
 
 
 @view_config(route_name="api-patients-last", renderer="json")
+@handle_rest
+@require_any_role
 def api_patients_last(request):
     p1 = {
         "firstname": "Karen",

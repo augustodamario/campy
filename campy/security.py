@@ -1,6 +1,7 @@
 # coding: utf-8
 from functools import wraps
 from google.appengine.api import users
+from pyramid.exceptions import HTTPForbidden
 
 
 class _Roles:
@@ -43,7 +44,7 @@ def require_any_role(f):
     @wraps(f)
     def wrapper(request):
         if has_current_user_any_role():
-            return add_logout_url(f(request))
+            return f(request)
         raise UnauthorizedException
     return wrapper
 
@@ -54,14 +55,31 @@ def require_role(*names):
         def wrapper(request):
             for name in names:
                 if has_current_user_role(name):
-                    return add_logout_url(f(request))
+                    return f(request)
             raise UnauthorizedException
         return wrapper
     return decorator
+
+
+def handle_view(f):
+    @wraps(f)
+    def wrapper(request):
+        return add_logout_url(f(request))
+    return wrapper
 
 
 def handle_exception(f):
     @wraps(f)
     def wrapper(ex, request):
         return add_logout_url(f(ex, request))
+    return wrapper
+
+
+def handle_rest(f):
+    @wraps(f)
+    def wrapper(request):
+        try:
+            return f(request)
+        except UnauthorizedException:
+            raise HTTPForbidden
     return wrapper
