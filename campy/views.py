@@ -1,10 +1,9 @@
 # coding: utf-8
-from security import add_logout_url
-from security import handle_exception
+from google.appengine.api import users
 from security import handle_rest
-from security import handle_view
 from security import require_any_role
 from security import UnauthorizedException
+from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -12,21 +11,25 @@ from pyramid.view import view_config
 
 def includeme(config):
     config.add_route("templates", "/templates/{name}.html")
+    config.add_route("logout", "/salir")
     config.add_route("api-patients-last", "/api/patients/last")
     config.scan(__name__)
 
 
 @view_config(context=UnauthorizedException, renderer="unauthorized.html")
-@handle_exception
 def unauthorized(ex, request):
     return {}
 
 
 @view_config(route_name="templates")
-@handle_view
 @require_any_role
 def templates(request):
-    return Response(render(request.matchdict["name"] + ".html", add_logout_url({}), request=request))
+    return Response(render(request.matchdict["name"] + ".html", {}, request=request))
+
+
+@view_config(route_name="logout")
+def logout(request):
+    return HTTPFound(location=users.create_logout_url("/"))
 
 
 @view_config(route_name="api-patients-last", renderer="json")

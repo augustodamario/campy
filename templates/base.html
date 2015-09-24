@@ -1,8 +1,6 @@
 <div class="section-title h3">
     {% block section_title %}{% endblock %}
-    {% if logout_url %}
-        <a class="logout small" href="{= logout_url =}">Salir</a>
-    {% endif %}
+    <a class="logout small" href="/salir">Salir</a>
 </div>
 <div class="container">
     <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
