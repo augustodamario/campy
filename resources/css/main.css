@@ -1,3 +1,6 @@
+/* Required by UI Bootstrap */
+.nav, .pagination, .carousel, .panel-title a {cursor:pointer;}
+
 .section-title {margin:0; padding:10px 2%; background-color:#0ab4fd; color:#ffffff;}
 .section-actions {margin:10px;}
 .section-actions-bottom {height:0.3em; background-color:#286090;}

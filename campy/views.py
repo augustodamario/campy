@@ -12,11 +12,12 @@ from pyramid.view import view_config
 
 
 def includeme(config):
-    config.add_route("home", "/")
-    config.add_route("templates", "/templates/{name}.html")
-    config.add_route("logout", "/salir")
-    config.add_route("api-user-current", "/api/user/CURRENT")
-    config.add_route("api-patients-last", "/api/patients/last")
+    config.add_route("home", "/", request_method="GET")
+    config.add_route("templates", "/templates/{name}.html", request_method="GET")
+    config.add_route("logout", "/salir", request_method="GET")
+    config.add_route("api-user-current", "/api/user", request_method="GET")
+    config.add_route("api-patient-new", "/api/patient", request_method="POST")
+    config.add_route("api-patients-last", "/api/patients/last", request_method="GET")
     config.scan(__name__)
 
 
@@ -46,11 +47,17 @@ def logout(request):
 @handle_rest
 @require_any_role
 def api_user_current(request):
-    user = users.get_current_user()
     return {
-        "user": user.email() if user else None,
+        "user": users.get_current_user().email(),
         "roles": get_current_user_roles()
     }
+
+
+@view_config(route_name="api-patient-new", renderer="json")
+@handle_rest
+@require_any_role
+def api_patient_new(request):
+    return {}
 
 
 @view_config(route_name="api-patients-last", renderer="json")

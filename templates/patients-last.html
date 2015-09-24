@@ -4,12 +4,14 @@
     Pacientes Recientes
 {% endblock %}
 
+{% block section_controller %}PatientsLastController{% endblock %}
+
 {% block section_actions %}
     <a class="btn btn-primary btn-sm" ui-sref="patient-new" role="button">Nuevo Paciente</a>
 {% endblock %}
 
 {% block section_body %}
-    <div class="table-responsive" ng-controller="PatientsLastController">
+    <div class="table-responsive">
         <table class="table table-condensed table-hover">
             <thead>
                 <tr>

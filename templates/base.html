@@ -2,10 +2,12 @@
     {% block section_title %}{% endblock %}
     <a class="logout small" href="/salir">Salir</a>
 </div>
-<div class="container">
-    <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
-</div>
-<div class="section-actions-bottom"></div>
-<div class="container">
-    {% block section_body %}{%endblock%}
+<div ng-controller="{% block section_controller %}{% endblock %}">
+    <div class="container">
+        <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
+    </div>
+    <div class="section-actions-bottom"></div>
+    <div class="container">
+        {% block section_body %}{%endblock%}
+    </div>
 </div>

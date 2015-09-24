@@ -1,8 +1,8 @@
-angular.module("cam", ["ui.router"])
+angular.module("cam", ["ui.router", "ui.bootstrap"])
     .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
-        $http.get("/api/user/CURRENT").then(function(response) {Session.set(response.data);});
+        $http.get("/api/user").then(function(response) {Session.set(response.data);});
     }])
     .config(["$locationProvider", "$urlRouterProvider", "$stateProvider", function($locationProvider, $urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
@@ -29,4 +29,21 @@ angular.module("cam", ["ui.router"])
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {
         $scope.patients = [];
         $http.get("/api/patients/last").then(function(response) {$scope.patients = response.data;});
+    }])
+    .controller("PatientNewController", ["$scope", "$http", function($scope, $http) {
+        $scope.patient = {
+            firstname: null,
+            middlename: null,
+            surname: null,
+            birthdate: null,
+            nationality: null
+        };
+        $scope.birthdatePicker = {
+            isVisible: false,
+            minDate: new Date(1900, 1, 1),
+            maxDate: new Date()
+        };
+        $scope.save = function() {
+            $http.post("/api/patient", $scope.patient).then(function(response) {});
+        }
     }]);
