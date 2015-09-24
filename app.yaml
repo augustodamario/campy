@@ -7,10 +7,6 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /
-  static_files: templates/index.html
-  upload: templates/index.html
-  login: required
 - url: /resources
   static_dir: resources
 - url: /.*

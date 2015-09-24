@@ -2,6 +2,7 @@
 from functools import wraps
 from google.appengine.api import users
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.httpexceptions import HTTPFound
 
 
 class _Roles:
@@ -24,20 +25,26 @@ def _get_roles(email):
     return []
 
 
-def has_current_user_any_role():
+def get_current_user_roles():
     user = users.get_current_user()
-    return user and _get_roles(user.email())
+    if user:
+        return _get_roles(user.email())
+    return []
 
 
-def has_current_user_role(name):
-    user = users.get_current_user()
-    return user and name in _get_roles(user.email())
+def require_login(f):
+    @wraps(f)
+    def wrapper(request):
+        if not users.get_current_user():
+            raise HTTPFound(location=users.create_login_url(request.url))
+        return f(request)
+    return wrapper
 
 
 def require_any_role(f):
     @wraps(f)
     def wrapper(request):
-        if has_current_user_any_role():
+        if get_current_user_roles():
             return f(request)
         raise UnauthorizedException
     return wrapper
@@ -47,8 +54,9 @@ def require_role(*names):
     def decorator(f):
         @wraps(f)
         def wrapper(request):
+            u_roles = get_current_user_roles()
             for name in names:
-                if has_current_user_role(name):
+                if name in u_roles:
                     return f(request)
             raise UnauthorizedException
         return wrapper
