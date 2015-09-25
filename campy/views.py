@@ -1,5 +1,6 @@
 # coding: utf-8
 from google.appengine.api import users
+from models import Patient
 from security import get_current_user_roles
 from security import handle_rest
 from security import require_any_role
@@ -57,7 +58,8 @@ def api_user_current(request):
 @handle_rest
 @require_any_role
 def api_patient_new(request):
-    return {}
+    key = Patient().from_dict(request.json_body).put()
+    return {"id": key.id()}
 
 
 @view_config(route_name="api-patients-last", renderer="json")

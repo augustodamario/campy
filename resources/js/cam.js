@@ -41,9 +41,11 @@ angular.module("cam", ["ui.router", "ui.bootstrap"])
         $scope.birthdatePicker = {
             isVisible: false,
             minDate: new Date(1900, 1, 1),
-            maxDate: new Date()
+            maxDate: new Date(),
+            options: {startingDay: 1}
         };
         $scope.save = function() {
-            $http.post("/api/patient", $scope.patient).then(function(response) {});
+            var patient = angular.merge({}, $scope.patient);
+            $http.post("/api/patient", patient).then(function(response) {});
         }
     }]);

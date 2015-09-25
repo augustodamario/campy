@@ -34,7 +34,8 @@
                 <p class="input-group">
                     <input id="birthdate" class="form-control" type="text" ng-required="true" ng-model="patient.birthdate"
                             is-open="birthdatePicker.isVisible" min-date="birthdatePicker.minDate" max-date="birthdatePicker.maxDate"
-                            datepicker-popup="dd/MM/yyyy" show-weeks="false" current-text="Hoy" clear-text="Borrar" close-text="Close"/>
+                            datepicker-options="birthdatePicker.options" datepicker-popup="dd/MM/yyyy"
+                            show-weeks="false" current-text="Hoy" clear-text="Borrar" close-text="Close"/>
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button" ng-click="birthdatePicker.isVisible = true">
                             <i class="glyphicon glyphicon-calendar"></i>
