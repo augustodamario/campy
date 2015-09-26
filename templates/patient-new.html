@@ -14,25 +14,28 @@
 {% block section_body %}
     <form class="form-horizontal">
         <h4>Información del paciente</h4>
-        <div class="form-group col-sm-12">
-            <label class="control-label" for="firstname">NOMBRE *</label>
-            <div>
-                <div class="col-sm-4">
-                    <input id="firstname" class="form-control" type="text" required="required" ng-model="patient.firstname" placeholder="Primer nombre"/>
-                </div>
-                <div class="col-sm-4">
-                    <input id="middlename" class="form-control" type="text" ng-model="patient.middlename" placeholder="Segundo nombre (Opcional)"/>
-                </div>
-                <div class="col-sm-4">
-                    <input id="surname" class="form-control" type="text" required="required" ng-model="patient.surname" placeholder="Apellido"/>
-                </div>
+        <div class="row">
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.firstname}">
+                <label class="control-label" for="firstname">NOMBRE *</label>
+                <input id="firstname" class="form-control" type="text" ng-model="patient.firstname" placeholder="Primer nombre"/>
+                <alert class="well-sm" ng-repeat="message in errors.firstname" type="danger">{{message}}</alert>
+            </div>
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.middlename}">
+                <label class="control-label" for="middlename">&nbsp;</label>
+                <input id="middlename" class="form-control" type="text" ng-model="patient.middlename" placeholder="Segundo nombre (Opcional)"/>
+                <alert class="well-sm" ng-repeat="message in errors.middlename" type="danger">{{message}}</alert>
+            </div>
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.surname}">
+                <label class="control-label" for="surname">&nbsp;</label>
+                <input id="surname" class="form-control" type="text" ng-model="patient.surname" placeholder="Apellido"/>
+                <alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{message}}</alert>
             </div>
         </div>
-        <div class="form-group col-sm-4">
-            <label class="control-label" for="birthdate">FECHA DE NACIMIENTO *</label>
-            <div>
-                <p class="input-group">
-                    <input id="birthdate" class="form-control" type="text" ng-required="true" ng-model="patient.birthdate"
+        <div class="row">
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.birthdate}">
+                <label class="control-label" for="birthdate">FECHA DE NACIMIENTO *</label>
+                <div class="input-group">
+                    <input id="birthdate" class="form-control" type="text" ng-model="patient.birthdate"
                             is-open="birthdatePicker.isVisible" min-date="birthdatePicker.minDate" max-date="birthdatePicker.maxDate"
                             datepicker-options="birthdatePicker.options" datepicker-popup="dd/MM/yyyy"
                             show-weeks="false" current-text="Hoy" clear-text="Borrar" close-text="Close"/>
@@ -41,15 +44,28 @@
                             <i class="glyphicon glyphicon-calendar"></i>
                         </button>
                   </span>
-                </p>
+                </div>
+                <alert class="well-sm" ng-repeat="message in errors.birthdate" type="danger">{{message}}</alert>
             </div>
-        </div>
-        <div class="form-group" class="col-sm-4">
-            <label class="control-label">NACIONALIDAD *</label>
-            <div class="col-sm-12">
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.nationality}">
+                <label class="control-label">NACIONALIDAD *</label>
                 <select id="nationality" class="form-control" ng-model="patient.nationality">
                     <option selected="selected">Argentina</option>
                 </select>
+                <alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{message}}</alert>
+            </div>
+        </div>
+        <h4>Información de contacto</h4>
+        <div class="row">
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone}">
+                <label class="control-label" for="cellphone">CELULAR *</label>
+                <input id="cellphone" class="form-control" type="text" ng-model="patient.cellphone"/>
+                <alert class="well-sm" ng-repeat="message in errors.cellphone" type="danger">{{message}}</alert>
+            </div>
+            <div class="form-group col-sm-4" ng-class="{'has-error': errors.email}">
+                <label class="control-label" for="email">EMAIL *</label>
+                <input id="email" class="form-control" type="text" ng-model="patient.email"/>
+                <alert class="well-sm" ng-repeat="message in errors.email" type="danger">{{message}}</alert>
             </div>
         </div>
     </form>

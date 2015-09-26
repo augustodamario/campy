@@ -44,8 +44,13 @@ angular.module("cam", ["ui.router", "ui.bootstrap"])
             maxDate: new Date(),
             options: {startingDay: 1}
         };
+        $scope.errors = {};
         $scope.save = function() {
             var patient = angular.merge({}, $scope.patient);
-            $http.post("/api/patient", patient).then(function(response) {});
+            $http.post("/api/patient", patient).then(function(response) {
+                $scope.errors = {};
+            }, function(response) {
+                $scope.errors = response.data;
+            });
         }
     }]);

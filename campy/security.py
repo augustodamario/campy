@@ -5,7 +5,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
 
 
-class _Roles:
+class _Roles(object):
     ADVISOR = "advisor"
 roles = _Roles
 
@@ -69,5 +69,5 @@ def handle_rest(f):
         try:
             return f(request)
         except UnauthorizedException:
-            raise HTTPForbidden(content_type="application/json; charset=UTF-8", body="{}")
+            raise HTTPForbidden(json={})
     return wrapper

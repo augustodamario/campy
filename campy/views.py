@@ -6,10 +6,12 @@ from security import handle_rest
 from security import require_any_role
 from security import require_login
 from security import UnauthorizedException
+from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPFound
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.view import view_config
+from validators import PatientForm
 
 
 def includeme(config):
@@ -58,32 +60,26 @@ def api_user_current(request):
 @handle_rest
 @require_any_role
 def api_patient_new(request):
-    key = Patient().from_dict(request.json_body).put()
-    return {"id": key.id()}
+    form = PatientForm(data=request.json_body)
+    if form.validate():
+        patient = Patient()
+        form.populate_obj(patient)
+        key = patient.put()
+        return {"id": key.id()}
+    else:
+        raise HTTPBadRequest(json=form.errors)
 
 
 @view_config(route_name="api-patients-last", renderer="json")
 @handle_rest
 @require_any_role
 def api_patients_last(request):
-    p1 = {
-        "firstname": "Karen",
-        "surname": "Rodríguez",
-        "birthdate": "14 Mar 1977",
-        "age": 38,
-        "cellphone": "011 15 5567 3456",
-        "email": "karen.suarez@gmail.com",
-        "lastaccesseddate": "13/04/15",
-        "lastaccessedtime": "14hs"
-    }
-    p2 = {
-        "firstname": "Patricia",
-        "surname": "Oliviera",
-        "birthdate": "14 Jul 1983",
-        "age": 29,
-        "cellphone": "0322 15 5567 345",
-        "email": "patri.oliviera@yahoo.com.ar",
-        "lastaccesseddate": "13/04/15",
-        "lastaccessedtime": "13hs"
-    }
-    return [p1, p2]
+    attributes = ["firstname", "surname", "age", "cellphone", "email"]
+    result = []
+    for patient in Patient.query().fetch(limit=5):
+        p = {k: v for (k, v) in patient.to_dict().iteritems() if k in attributes}
+        p["birthdate"] = None if not patient.birthdate else patient.birthdate.strftime("%d %b %Y")
+        p["lastaccesseddate"] = "13/04/15"
+        p["lastaccessedtime"] = "14hs"
+        result.append(p)
+    return result
