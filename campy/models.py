@@ -25,10 +25,12 @@ class Patient(BaseModel):
 
     def age(self):
         if self.birthdate:
-            return (date.today() - self.birthdate).total_seconds() // (365.2425 * 24 * 60 * 60)
+            # TODO replace with precise algorithm
+            return int((date.today() - self.birthdate).total_seconds() / (365.2425 * 24 * 60 * 60))
         return None
 
     def to_dict(self):
         d = super(Patient, self).to_dict()
+        d["birthdate"] = None if not self.birthdate else self.birthdate.strftime("%Y-%m-%d")
         d["age"] = self.age()
         return d

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block section_controller %}PatientViewController{% endblock %}
+{% block section_title %}{{ patient.firstname }} {{ patient.middlename }} {{ patient.surname }}{% endblock %}
+
+{% block section_actions %}
+    <a class="btn btn-default btn-sm" role="button">Imprimir</a>
+    <a class="btn btn-primary btn-sm" role="button">Nueva Entrevista</a>
+{% endblock %}
+
+{% block section_body %}
+{% endblock %}

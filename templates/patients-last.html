@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 
-{% block section_title %}
-    Pacientes Recientes
-{% endblock %}
-
 {% block section_controller %}PatientsLastController{% endblock %}
+{% block section_title %}Pacientes Recientes{% endblock %}
 
 {% block section_actions %}
     <a class="btn btn-primary btn-sm" ui-sref="patient-new" role="button">Nuevo Paciente</a>
@@ -24,13 +21,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="patient in patients">
+                <tr ng-repeat="patient in patients" ng-click="$state.go('patient-view', {id: patient.id})">
                     <td><img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/></td>
                     <td>{{ patient.firstname }}</td>
                     <td>{{ patient.surname }}</td>
-                    <td>{{ patient.birthdate }}<br/>{{ patient.age }} años</td>
+                    <td>{{ patient.birthdate | date: "d MMM yy" }}<br/>{{ patient.age }} años</td>
                     <td>{{ patient.cellphone }}<br/>{{ patient.email }}</td>
-                    <td>{{ patient.lastaccesseddate }}<br/>{{ patient.lastaccessedtime }}</td>
+                    <td>{{ patient.lastaccessed | date: "H" }} hs<br/>{{ patient.lastaccessed | date: "dd/MM/yy" }}</td>
                 </tr>
             </tbody>
         </table>

@@ -1,10 +1,11 @@
-angular.module("cam", ["ui.router", "ui.bootstrap"])
+angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
     .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
+        $rootScope.Session = Session;
         $http.get("/api/user").then(function(response) {Session.set(response.data);});
     }])
-    .config(["$locationProvider", "$urlRouterProvider", "$stateProvider", function($locationProvider, $urlRouterProvider, $stateProvider) {
+    .config(["$urlRouterProvider", "$stateProvider", function($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
         $stateProvider
             .state("patients-last", {
@@ -14,6 +15,10 @@ angular.module("cam", ["ui.router", "ui.bootstrap"])
             .state("patient-new", {
                 url: "/paciente/nuevo",
                 templateUrl: "templates/patient-new.html"
+            })
+            .state("patient-view", {
+                url: "/paciente/{id:int}",
+                templateUrl: "templates/patient-view.html"
             });
     }])
     .service("Session", function() {
@@ -31,6 +36,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap"])
         $http.get("/api/patients/last").then(function(response) {$scope.patients = response.data;});
     }])
     .controller("PatientNewController", ["$scope", "$http", function($scope, $http) {
+        $scope.processing = false;
         $scope.patient = {
             firstname: null,
             middlename: null,
@@ -46,11 +52,19 @@ angular.module("cam", ["ui.router", "ui.bootstrap"])
         };
         $scope.errors = {};
         $scope.save = function() {
+            $scope.processing = true;
             var patient = angular.merge({}, $scope.patient);
+            // TODO convert utc date to local and format as yyyy-mm-dd
             $http.post("/api/patient", patient).then(function(response) {
                 $scope.errors = {};
+                $scope.processing = false;
+                $scope.$state.go("patient-view", response.data)
             }, function(response) {
                 $scope.errors = response.data;
+                $scope.processing = false;
             });
         }
+    }])
+    .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
+        $http.get("/api/patient/" + $scope.$stateParams.id).then(function(response) {$scope.patient = response.data;});
     }]);

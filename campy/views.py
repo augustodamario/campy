@@ -1,5 +1,6 @@
 # coding: utf-8
 from google.appengine.api import users
+from google.appengine.ext.ndb import Key
 from models import Patient
 from security import get_current_user_roles
 from security import handle_rest
@@ -8,6 +9,7 @@ from security import require_login
 from security import UnauthorizedException
 from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.renderers import render
 from pyramid.response import Response
 from pyramid.view import view_config
@@ -20,6 +22,7 @@ def includeme(config):
     config.add_route("logout", "/salir", request_method="GET")
     config.add_route("api-user-current", "/api/user", request_method="GET")
     config.add_route("api-patient-new", "/api/patient", request_method="POST")
+    config.add_route("api-patient", "/api/patient/{id}", request_method="GET")
     config.add_route("api-patients-last", "/api/patients/last", request_method="GET")
     config.scan(__name__)
 
@@ -70,16 +73,26 @@ def api_patient_new(request):
         raise HTTPBadRequest(json=form.errors)
 
 
+@view_config(route_name="api-patient", renderer="json")
+@handle_rest
+@require_any_role
+def api_patient(request):
+    try:
+        id = int(request.matchdict["id"])
+    except ValueError:
+        return HTTPBadRequest(json="{}")
+    patient = Key(Patient, id).get()
+    return patient.to_dict() if patient else HTTPNotFound(json={})
+
+
 @view_config(route_name="api-patients-last", renderer="json")
 @handle_rest
 @require_any_role
 def api_patients_last(request):
-    attributes = ["firstname", "surname", "age", "cellphone", "email"]
+    attributes = ["id", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
     result = []
-    for patient in Patient.query().fetch(limit=5):
+    for patient in Patient.query():
         p = {k: v for (k, v) in patient.to_dict().iteritems() if k in attributes}
-        p["birthdate"] = None if not patient.birthdate else patient.birthdate.strftime("%d %b %Y")
-        p["lastaccesseddate"] = "13/04/15"
-        p["lastaccessedtime"] = "14hs"
+        p["lastaccessed"] = "2015-04-13T17:00:00Z"
         result.append(p)
     return result
