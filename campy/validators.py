@@ -15,7 +15,7 @@ def _datefield_process_data(self, value):
     self.data = None
     if value is not None:
         try:
-            self.data = datetime.strptime(value[:10], self.format).date()
+            self.data = datetime.strptime(value, self.format).date()
         except ValueError:
             raise ValueError(self.gettext("Not a valid date value"))
 DateField.process_data = _datefield_process_data

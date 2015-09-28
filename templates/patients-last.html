@@ -27,7 +27,7 @@
                     <td>{{ patient.surname }}</td>
                     <td>{{ patient.birthdate | date: "d MMM yy" }}<br/>{{ patient.age }} años</td>
                     <td>{{ patient.cellphone }}<br/>{{ patient.email }}</td>
-                    <td>{{ patient.lastaccessed | date: "H" }} hs<br/>{{ patient.lastaccessed | date: "dd/MM/yy" }}</td>
+                    <td>{{ patient.modifiedon | date: "H" }} hs<br/>{{ patient.modifiedon | date: "dd/MM/yy" }}</td>
                 </tr>
             </tbody>
         </table>

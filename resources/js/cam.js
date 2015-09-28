@@ -35,7 +35,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $scope.patients = [];
         $http.get("/api/patients/last").then(function(response) {$scope.patients = response.data;});
     }])
-    .controller("PatientNewController", ["$scope", "$http", function($scope, $http) {
+    .controller("PatientNewController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         $scope.processing = false;
         $scope.patient = {
             firstname: null,
@@ -54,7 +54,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $scope.save = function() {
             $scope.processing = true;
             var patient = angular.merge({}, $scope.patient);
-            // TODO convert utc date to local and format as yyyy-mm-dd
+            patient.birthdate = $filter("date")(patient.birthdate, "yyyy-MM-dd");
             $http.post("/api/patient", patient).then(function(response) {
                 $scope.errors = {};
                 $scope.processing = false;

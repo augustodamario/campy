@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 
 {% block section_controller %}PatientViewController{% endblock %}
-{% block section_title %}{{ patient.firstname }} {{ patient.middlename }} {{ patient.surname }}{% endblock %}
+{% block section_title %}
+    <img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/>
+    {{ patient.firstname }} {{ patient.middlename }} {{ patient.surname }}
+    <small>{{ patient.age }} años</small>
+    <small>{{ patient.cellphone }}</small>
+    <small>{{ patient.email }}</small>
+{% endblock %}
 
 {% block section_actions %}
     <a class="btn btn-default btn-sm" role="button">Imprimir</a>

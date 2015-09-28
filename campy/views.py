@@ -78,21 +78,18 @@ def api_patient_new(request):
 @require_any_role
 def api_patient(request):
     try:
-        id = int(request.matchdict["id"])
+        pid = int(request.matchdict["id"])
     except ValueError:
-        return HTTPBadRequest(json="{}")
-    patient = Key(Patient, id).get()
-    return patient.to_dict() if patient else HTTPNotFound(json={})
+        raise HTTPBadRequest(json={})
+    patient = Key(Patient, pid).get()
+    if not patient:
+        raise HTTPNotFound(json={})
+    return patient.json()
 
 
 @view_config(route_name="api-patients-last", renderer="json")
 @handle_rest
 @require_any_role
 def api_patients_last(request):
-    attributes = ["id", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
-    result = []
-    for patient in Patient.query():
-        p = {k: v for (k, v) in patient.to_dict().iteritems() if k in attributes}
-        p["lastaccessed"] = "2015-04-13T17:00:00Z"
-        result.append(p)
-    return result
+    attributes = ["id", "modifiedon", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
+    return [p.json(include=attributes) for p in Patient.query().order(-Patient.modifiedon)]
