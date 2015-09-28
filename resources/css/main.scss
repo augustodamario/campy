@@ -1,0 +1,56 @@
+// Required by UI Bootstrap
+.nav, .pagination, .carousel, .panel-title a {
+    cursor: pointer;
+}
+
+
+// Variables
+$color-primary: #ffffff;
+$color-back-primary: #0ab4fd;
+$color-back-secondary: #286090;
+
+
+// Sections
+.section-title {
+    margin: 0;
+    padding: 10px 2%;
+    background-color: $color-back-primary;
+    color: $color-primary;
+
+    small {
+        padding: 0 0 0 10px;
+        color: #daf1f2;
+    }
+}
+
+.section-actions {
+    margin: 10px;
+}
+
+.section-actions-bottom {
+    height: 0.3em;
+    background-color: $color-back-secondary;
+}
+
+
+// Logout
+.logout.small {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px 2% 0 0;
+    color: $color-primary;
+}
+
+
+// Tables
+.table-hover {
+    thead th {
+        background-color: $color-back-secondary;
+        color: $color-primary;
+    }
+
+    tbody th, tbody td {
+        cursor: pointer;
+    }
+}
