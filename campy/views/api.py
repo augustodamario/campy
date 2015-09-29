@@ -1,52 +1,22 @@
 # coding: utf-8
+from campy.models import Patient
+from campy.security import get_current_user_roles
+from campy.security import handle_rest
+from campy.security import require_any_role
+from campy.validators import PatientForm
 from google.appengine.api import users
 from google.appengine.ext.ndb import Key
-from models import Patient
-from security import get_current_user_roles
-from security import handle_rest
-from security import require_any_role
-from security import require_login
-from security import UnauthorizedException
 from pyramid.httpexceptions import HTTPBadRequest
-from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
-from pyramid.renderers import render
-from pyramid.response import Response
 from pyramid.view import view_config
-from validators import PatientForm
 
 
 def includeme(config):
-    config.add_route("home", "/", request_method="GET")
-    config.add_route("templates", "/templates/{name}.html", request_method="GET")
-    config.add_route("logout", "/salir", request_method="GET")
-    config.add_route("api-user-current", "/api/user", request_method="GET")
-    config.add_route("api-patient-new", "/api/patient", request_method="POST")
-    config.add_route("api-patient", "/api/patient/{id}", request_method="GET")
-    config.add_route("api-patients-last", "/api/patients/last", request_method="GET")
+    config.add_route("api-user-current", "/user", request_method="GET")
+    config.add_route("api-patient-new", "/patient", request_method="POST")
+    config.add_route("api-patient", "/patient/{id}", request_method="GET")
+    config.add_route("api-patients-last", "/patients/last", request_method="GET")
     config.scan(__name__)
-
-
-@view_config(context=UnauthorizedException, renderer="unauthorized.html")
-def unauthorized(ex, request):
-    return {}
-
-
-@view_config(route_name="home", renderer="index.html")
-@require_login
-def home(request):
-    return {}
-
-
-@view_config(route_name="templates")
-@require_any_role
-def templates(request):
-    return Response(render(request.matchdict["name"] + ".html", {}, request=request))
-
-
-@view_config(route_name="logout")
-def logout(request):
-    return HTTPFound(location=users.create_logout_url("/"))
 
 
 @view_config(route_name="api-user-current", renderer="json")
