@@ -6,6 +6,7 @@ from pyramid.httpexceptions import HTTPFound
 
 
 class _Roles(object):
+    SYSTEM_ADMINISTRATOR = "system administrator"
     ADVISOR = "advisor"
 roles = _Roles
 
@@ -28,7 +29,10 @@ def _get_roles(email):
 def get_current_user_roles():
     user = users.get_current_user()
     if user:
-        return _get_roles(user.email())
+        r = _get_roles(user.email())
+        if users.is_current_user_admin():
+            r.append(roles.SYSTEM_ADMINISTRATOR)
+        return r
     return []
 
 
