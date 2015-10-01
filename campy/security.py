@@ -3,6 +3,10 @@ from functools import wraps
 from google.appengine.api import users
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPFound
+import threading
+
+
+_session = threading.local()
 
 
 class _User(object):
@@ -30,19 +34,23 @@ def session_tween_factory(handler, registry):
         "magoarcano@gmail.com"]
 
     def session_tween(request):
-        user = users.get_current_user()
-        if user:
-            _email = user.email()
+        _user = None
+        g_user = users.get_current_user()
+        if g_user:
+            _email = g_user.email()
             _roles = []
             if users.is_current_user_admin():
                 _roles.append(roles.SYSTEM_ADMINISTRATOR)
             if _email in test_users:
                 _roles.append(roles.ADVISOR)
-            request.user = _User(_email, _roles)
-        else:
-            request.user = None
+            _user = _User(_email, _roles)
+        request.user = _session.user = _user
         return handler(request)
     return session_tween
+
+
+def get_current_user():
+    return _session.user
 
 
 def require_login(f):
