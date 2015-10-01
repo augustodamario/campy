@@ -13,6 +13,7 @@ config = Configurator(settings={
 config.include("pyramid_jinja2")
 config.add_jinja2_renderer(".html")
 config.add_jinja2_search_path("templates", name=".html")
+config.add_tween("campy.security.session_tween_factory")
 config.include("campy.views.ui")
 config.include("campy.views.api", route_prefix="/api")
 

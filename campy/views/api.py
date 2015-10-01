@@ -1,10 +1,8 @@
 # coding: utf-8
 from campy.models import Patient
-from campy.security import get_current_user_roles
 from campy.security import handle_rest
 from campy.security import require_any_role
 from campy.validators import PatientForm
-from google.appengine.api import users
 from google.appengine.ext.ndb import Key
 from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.httpexceptions import HTTPNotFound
@@ -24,8 +22,8 @@ def includeme(config):
 @require_any_role
 def api_user_current(request):
     return {
-        "user": users.get_current_user().email(),
-        "roles": get_current_user_roles()
+        "user": request.user.email,
+        "roles": request.user.roles
     }
 
 
