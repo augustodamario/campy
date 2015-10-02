@@ -48,7 +48,9 @@
                 <div class="form-group col-sm-4" ng-class="{'has-error': errors.nationality}">
                     <label class="control-label">NACIONALIDAD *</label>
                     <select id="nationality" class="form-control" ng-model="patient.nationality">
-                        <option selected="selected">Argentina</option>
+                        {% for nationality in nationalities %}
+                            <option>{= nationality =}</option>
+                        {% endfor %}
                     </select>
                     <alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{message}}</alert>
                 </div>

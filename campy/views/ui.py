@@ -1,4 +1,5 @@
 # coding: utf-8
+from campy.models import NATIONALITIES
 from campy.security import require_any_role
 from campy.security import require_login
 from campy.security import UnauthorizedException
@@ -30,7 +31,8 @@ def home(request):
 @view_config(route_name="templates")
 @require_any_role
 def templates(request):
-    return Response(render(request.matchdict["name"] + ".html", {}, request=request))
+    context = {"nationalities": NATIONALITIES}
+    return Response(render(request.matchdict["name"] + ".html", context, request=request))
 
 
 @view_config(route_name="logout")

@@ -1,8 +1,10 @@
 # coding: utf-8
+from campy.models import NATIONALITIES
 from datetime import datetime
 from wtforms.fields import DateField
 from wtforms.fields import StringField
 from wtforms.form import Form
+from wtforms.validators import AnyOf
 from wtforms.validators import DataRequired
 from wtforms.validators import Email
 from wtforms.validators import Length
@@ -38,7 +40,7 @@ class PatientForm(BaseForm):
     middlename = StringField(validators=[DataOptional(), Length(min=2)])
     surname = StringField(validators=[DataRequired(), Length(min=2)])
     birthdate = DateField(validators=[DataRequired()], format="%Y-%m-%d")
-    nationality = StringField(validators=[DataOptional()])
+    nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
     cellphone = StringField(validators=[DataOptional(), Length(min=10)])
     email = StringField(validators=[DataOptional(), Email()])
     notes = StringField(validators=[DataOptional()])
