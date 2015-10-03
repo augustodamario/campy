@@ -1,0 +1,20 @@
+SEDE COMO PARTE DE LA RUTA (URL):
++ cambio de sede obliga a recargar las plantillas (customización de sede del lado servidor)
++ se puede mantener una ventana abierta por cada sede en el mismo navegador
+- se pierde cache de plantillas al cambiar de sede
+- no se usa una única URL para todas las sedes
+
+SEDE COMO ATRIBUTO DE LA ENTIDAD USUARIO (BD):
++ se puede mantener cache de plantillas al cambiar de sede
++ única URL para todas las sedes
+- puede requerir mayor customización de las plantillas del lado cliente
+- cambio de sede requiere actualizar la entidad
+- alta dificultad de actualizar todas las ventanas abiertas al cambiar de sede
+
+SEDE COMO OBJETO EN MEMCACHE CON CLAVE BASADA EN LA SESIÓN DEL NAVEGADOR (COOKIE):
++ se puede mantener cache de plantillas al cambiar de sede
++ única URL para todas las sedes
+- puede requerir mayor customización de las plantillas del lado cliente
+- no se puede mantener una ventana por cada sede en el mismo navegador
+- mayor cantidad de objetos en memcache
+- selección de sede se pierde al expirar objeto en memcache
