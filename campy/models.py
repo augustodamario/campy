@@ -21,12 +21,15 @@ class BaseModel(Model):
         return d
 
 
+class Branch(BaseModel):
+    pass
+
+
 class User(BaseModel):
     email = StringProperty(required=True)
     roles = StringProperty(repeated=True)
 
     def __init__(self, **kwargs):
-        kwargs["parent"] = Key("Users", "default")
         kwargs["id"] = kwargs.get("email")
         super(User, self).__init__(**kwargs)
 

@@ -12,7 +12,7 @@ from pyramid.view import view_config
 def includeme(config):
     config.add_route("api-user-current", "/user", request_method="GET")
     config.add_route("api-patient-new", "/patient", request_method="POST")
-    config.add_route("api-patient", "/patient/{id}", request_method="GET")
+    config.add_route("api-patient", "/patient/{id:[0-9]+}", request_method="GET")
     config.add_route("api-patients-last", "/patients/last", request_method="GET")
     config.scan(__name__)
 

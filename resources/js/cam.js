@@ -3,7 +3,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.Session = Session;
-        $http.get("/api/user").then(function(response) {Session.set(response.data);});
+        $http.get("api/user").then(function(response) {Session.set(response.data);});
     }])
     .config(["$urlRouterProvider", "$stateProvider", function($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
@@ -33,7 +33,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
     })
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {
         $scope.patients = [];
-        $http.get("/api/patients/last").then(function(response) {$scope.patients = response.data;});
+        $http.get("api/patients/last").then(function(response) {$scope.patients = response.data;});
     }])
     .controller("PatientNewController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         $scope.processing = false;
@@ -55,7 +55,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             $scope.processing = true;
             var patient = angular.merge({}, $scope.patient);
             patient.birthdate = $filter("date")(patient.birthdate, "yyyy-MM-dd");
-            $http.post("/api/patient", patient).then(function(response) {
+            $http.post("api/patient", patient).then(function(response) {
                 $scope.errors = {};
                 $scope.processing = false;
                 $scope.$state.go("patient-view", response.data)
@@ -66,5 +66,5 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         }
     }])
     .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
-        $http.get("/api/patient/" + $scope.$stateParams.id).then(function(response) {$scope.patient = response.data;});
+        $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {$scope.patient = response.data;});
     }]);
