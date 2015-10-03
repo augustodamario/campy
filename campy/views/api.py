@@ -32,13 +32,12 @@ def api_user_current(request):
 @require_any_role
 def api_patient_new(request):
     form = PatientForm(data=request.json_body)
-    if form.validate():
-        patient = Patient()
-        form.populate_obj(patient)
-        key = patient.put()
-        return {"id": key.id()}
-    else:
+    if not form.validate():
         raise HTTPBadRequest(json=form.errors)
+    patient = Patient()
+    form.populate_obj(patient)
+    key = patient.put()
+    return {"id": key.id()}
 
 
 @view_config(route_name="api-patient", renderer="json")
@@ -49,7 +48,7 @@ def api_patient(request):
         pid = int(request.matchdict["id"])
     except ValueError:
         raise HTTPBadRequest(json={})
-    patient = Key(Patient, pid).get()
+    patient = Key(Patient, pid, parent=request.branch.key).get()
     if not patient:
         raise HTTPNotFound(json={})
     return patient.json()
@@ -60,4 +59,4 @@ def api_patient(request):
 @require_any_role
 def api_patients_last(request):
     attributes = ["id", "modifiedon", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
-    return [p.json(include=attributes) for p in Patient.query().order(-Patient.modifiedon)]
+    return [p.json(include=attributes) for p in Patient.query(ancestor=request.branch.key).order(-Patient.modifiedon)]

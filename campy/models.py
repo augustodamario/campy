@@ -1,9 +1,9 @@
 # coding: utf-8
+from campy.security import get_current_branch
 from datetime import date
 from datetime import datetime
 from google.appengine.ext.ndb import DateProperty
 from google.appengine.ext.ndb import DateTimeProperty
-from google.appengine.ext.ndb import Key
 from google.appengine.ext.ndb import Model
 from google.appengine.ext.ndb import StringProperty
 from google.appengine.ext.ndb import TextProperty
@@ -25,7 +25,14 @@ class Branch(BaseModel):
     pass
 
 
-class User(BaseModel):
+class BranchTopModel(BaseModel):
+    def __init__(self, **kwargs):
+        if "parent" not in kwargs and get_current_branch():
+            kwargs["parent"] = get_current_branch().key
+        super(BranchTopModel, self).__init__(**kwargs)
+
+
+class User(BranchTopModel):
     email = StringProperty(required=True)
     roles = StringProperty(repeated=True)
 
@@ -34,7 +41,7 @@ class User(BaseModel):
         super(User, self).__init__(**kwargs)
 
 
-class Patient(BaseModel):
+class Patient(BranchTopModel):
     createdon = DateTimeProperty(required=True, indexed=False, auto_now_add=True)
     modifiedon = DateTimeProperty(required=True, auto_now=True)
     firstname = StringProperty(required=True)

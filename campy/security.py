@@ -1,6 +1,4 @@
 # coding: utf-8
-from campy.models import Branch
-from campy.models import User
 from functools import wraps
 from google.appengine.api import users
 from google.appengine.ext.ndb import Key
@@ -30,19 +28,27 @@ class UnauthorizedException(Exception):
     pass
 
 
-# Pyramid tween factory: sets user session and branch data on each request
-def session_tween_factory(handler, registry):
-    branch_prefix = "/sede/([a-z]+)/.*"
-
-    def session_tween(request):
-        _branch = None
-        m = match(branch_prefix, request.path)
+# Pyramid tween factory: sets current branch on each request
+def branch_tween_factory(handler, registry):
+    def tween(request):
+        branch = None
+        m = match("/sede/([a-z]+)/.*", request.path)
         if m:
-            _branch = m.group(1)
-            if not Key(Branch, _branch).get():
+            branch = Key("Branch", m.group(1)).get()
+            if not branch:
                 return HTTPNotFound()
-        request.branch = _session.branch = _branch
+        request.branch = _session.branch = branch
+        return handler(request)
+    return tween
 
+
+def get_current_branch():
+    return _session.branch if hasattr(_session, "branch") else None
+
+
+# Pyramid tween factory: sets user session data on each request
+def session_tween_factory(handler, registry):
+    def tween(request):
         _user = None
         g_user = users.get_current_user()
         if g_user:
@@ -50,18 +56,18 @@ def session_tween_factory(handler, registry):
             _roles = []
             if users.is_current_user_admin():
                 _roles.append(roles.SYSTEM_ADMINISTRATOR)
-            if _branch:
-                c_user = Key(Branch, _branch, User, _email).get()
+            if request.branch:
+                c_user = Key("User", _email, parent=request.branch.key).get()
                 if c_user:
                     _roles.extend(c_user.roles)
             _user = _User(_email, _roles)
         request.user = _session.user = _user
         return handler(request)
-    return session_tween
+    return tween
 
 
 def get_current_user():
-    return _session.user
+    return _session.user if hasattr(_session, "user") else None
 
 
 def require_login(f):
