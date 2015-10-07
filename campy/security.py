@@ -13,9 +13,17 @@ _session = threading.local()
 
 
 class _User(object):
-    def __init__(self, a_email, a_roles):
+    def __init__(self, a_name, a_email, a_roles):
+        self.name = a_name
         self.email = a_email
         self.roles = a_roles
+
+    def json(self):
+        return {
+            "name": self.name,
+            "email": self.email,
+            "roles": self.roles
+        }
 
 
 class _Roles(object):
@@ -54,13 +62,15 @@ def session_tween_factory(handler, registry):
         if g_user:
             _email = g_user.email()
             _roles = []
+            _name = _email
             if users.is_current_user_admin():
                 _roles.append(roles.SYSTEM_ADMINISTRATOR)
             if request.branch:
                 c_user = Key("User", _email, parent=request.branch.key).get()
                 if c_user:
                     _roles.extend(c_user.roles)
-            _user = _User(_email, _roles)
+                    _name = c_user.name
+            _user = _User(_name, _email, _roles)
         request.user = _session.user = _user
         return handler(request)
     return tween

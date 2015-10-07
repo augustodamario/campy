@@ -33,10 +33,10 @@ def logout(request):
 def initialize(request):
     key = Key(Branch, "caba")
     if not key.get():
-        Branch(key=key).put()
+        Branch(key=key, name="Capital").put()
         u_roles = [roles.ADVISOR]
-        User(parent=key, email="test@example.com", roles=u_roles).put()
-        User(parent=key, email="augustodamario@gmail.com", roles=u_roles).put()
-        User(parent=key, email="julio.veronelli@crossknight.com.ar", roles=u_roles).put()
-        User(parent=key, email="magoarcano@gmail.com", roles=u_roles).put()
+        User(parent=key, name=u"Juan Prueba", email="test@example.com", roles=u_roles).put()
+        User(parent=key, name=u"Augusto D'Amario", email="augustodamario@gmail.com", roles=u_roles).put()
+        User(parent=key, name=u"Julio Veronelli", email="julio.veronelli@crossknight.com.ar", roles=u_roles).put()
+        User(parent=key, name=u"Hernán Acosta", email="magoarcano@gmail.com", roles=u_roles).put()
     return "OK"

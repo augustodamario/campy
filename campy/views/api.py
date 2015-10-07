@@ -13,6 +13,7 @@ def includeme(config):
     config.add_route("api-user-current", "/user", request_method="GET")
     config.add_route("api-patient-new", "/patient", request_method="POST")
     config.add_route("api-patient", "/patient/{id:[0-9]+}", request_method="GET")
+    config.add_route("api-patient-edit", "/patient/{id:[0-9]+}", request_method="POST")
     config.add_route("api-patients-last", "/patients/last", request_method="GET")
     config.scan(__name__)
 
@@ -21,10 +22,7 @@ def includeme(config):
 @handle_rest
 @require_any_role
 def api_user_current(request):
-    return {
-        "user": request.user.email,
-        "roles": request.user.roles
-    }
+    return request.user.json()
 
 
 @view_config(route_name="api-patient-new", renderer="json")
@@ -52,6 +50,25 @@ def api_patient(request):
     if not patient:
         raise HTTPNotFound(json={})
     return patient.json()
+
+
+@view_config(route_name="api-patient-edit", renderer="json")
+@handle_rest
+@require_any_role
+def api_patient_edit(request):
+    form = PatientForm(data=request.json_body)
+    if not form.validate():
+        raise HTTPBadRequest(json=form.errors)
+    try:
+        pid = int(request.matchdict["id"])
+    except ValueError:
+        raise HTTPBadRequest(json={})
+    patient = Key(Patient, pid, parent=request.branch.key).get()
+    if not patient:
+        raise HTTPNotFound(json={})
+    form.populate_obj(patient)
+    key = patient.put()
+    return {"id": key.id()}
 
 
 @view_config(route_name="api-patients-last", renderer="json")

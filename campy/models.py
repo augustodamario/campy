@@ -298,7 +298,7 @@ class BaseModel(Model):
 
 
 class Branch(BaseModel):
-    pass
+    name = StringProperty(required=True)
 
 
 class BranchTopModel(BaseModel):
@@ -309,6 +309,7 @@ class BranchTopModel(BaseModel):
 
 
 class User(BranchTopModel):
+    name = StringProperty(required=True)
     email = StringProperty(required=True)
     roles = StringProperty(repeated=True)
 
@@ -330,6 +331,14 @@ class Patient(BranchTopModel):
     province = StringProperty(required=True, choices=PROVINCES)
     city = StringProperty(required=True)
     district = StringProperty()
+    relative_firstname = StringProperty()
+    relative_middlename = StringProperty()
+    relative_surname = StringProperty()
+    relative_relationship = StringProperty()
+    relative_cellphone = StringProperty()
+    relative_province = StringProperty(choices=PROVINCES)
+    relative_city = StringProperty()
+    relative_district = StringProperty()
     notes = TextProperty()
 
     def age(self):

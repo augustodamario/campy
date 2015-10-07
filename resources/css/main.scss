@@ -11,6 +11,10 @@ $color-back-secondary: #286090;
 
 
 // Sections
+.section-menubar {
+    padding: 0 10px;
+}
+
 .section-title {
     margin: 0;
     padding: 10px 2%;
@@ -48,12 +52,8 @@ textarea {
     resize: none;
 }
 
-.logout.small {
-    position: absolute;
-    top: 0;
-    right: 0;
-    padding: 15px 2% 0 0;
-    color: $color-primary;
+.logout {
+    float: right;
 }
 
 .table-hover {
