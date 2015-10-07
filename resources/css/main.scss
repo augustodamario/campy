@@ -33,7 +33,21 @@ $color-back-secondary: #286090;
 }
 
 
-// Logout
+// Other
+h4 {
+    span.heading {
+        display: inline-block;
+        min-width: 35%;
+        padding: 5px 5px 2px 20px;
+        background-color: $color-back-secondary;
+        color: $color-primary;
+    }
+}
+
+textarea {
+    resize: none;
+}
+
 .logout.small {
     position: absolute;
     top: 0;
@@ -42,8 +56,6 @@ $color-back-secondary: #286090;
     color: $color-primary;
 }
 
-
-// Tables
 .table-hover {
     thead th {
         background-color: $color-back-secondary;

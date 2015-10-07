@@ -37,13 +37,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
     }])
     .controller("PatientNewController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         $scope.processing = false;
-        $scope.patient = {
-            firstname: null,
-            middlename: null,
-            surname: null,
-            birthdate: null,
-            nationality: null
-        };
+        $scope.patient = {};
         $scope.birthdatePicker = {
             isVisible: false,
             minDate: new Date(1900, 1, 1),

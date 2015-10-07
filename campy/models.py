@@ -9,66 +9,6 @@ from google.appengine.ext.ndb import StringProperty
 from google.appengine.ext.ndb import TextProperty
 
 
-class BaseModel(Model):
-    def json(self, include=None, exclude=None):
-        d = super(BaseModel, self).to_dict(include=include, exclude=exclude)
-        for k, v in d.iteritems():
-            if isinstance(v, datetime):
-                d[k] = v.strftime("%Y-%m-%dT%H:%M:%SZ")
-            elif isinstance(v, date):
-                d[k] = v.strftime("%Y-%m-%d")
-        d["id"] = self.key.id()
-        return d
-
-
-class Branch(BaseModel):
-    pass
-
-
-class BranchTopModel(BaseModel):
-    def __init__(self, **kwargs):
-        if "parent" not in kwargs and get_current_branch():
-            kwargs["parent"] = get_current_branch().key
-        super(BranchTopModel, self).__init__(**kwargs)
-
-
-class User(BranchTopModel):
-    email = StringProperty(required=True)
-    roles = StringProperty(repeated=True)
-
-    def __init__(self, **kwargs):
-        kwargs["id"] = kwargs.get("email")
-        super(User, self).__init__(**kwargs)
-
-
-class Patient(BranchTopModel):
-    createdon = DateTimeProperty(required=True, indexed=False, auto_now_add=True)
-    modifiedon = DateTimeProperty(required=True, auto_now=True)
-    firstname = StringProperty(required=True)
-    middlename = StringProperty()
-    surname = StringProperty(required=True)
-    birthdate = DateProperty(required=True, indexed=False)
-    nationality = StringProperty(indexed=False)
-    cellphone = StringProperty()
-    email = StringProperty()
-    notes = TextProperty()
-
-    def age(self):
-        if self.birthdate:
-            today = date.today()
-            years = today.year - self.birthdate.year - 1
-            if today.month > self.birthdate.month or\
-                    (today.month == self.birthdate.month and today.day >= self.birthdate.day):
-                years += 1
-            return max(0, years)
-        return None
-
-    def json(self, include=None, exclude=None):
-        d = super(Patient, self).json(include=include, exclude=exclude)
-        d["age"] = self.age()
-        return d
-
-
 NATIONALITIES = [
     u"DESCONOCIDA",
     u"Abjasia",
@@ -316,3 +256,93 @@ NATIONALITIES = [
     u"Zimbabue",
     u"OTRA"
 ]
+
+
+PROVINCES = [
+    u"Buenos Aires",
+    u"Catamarca",
+    u"Chaco",
+    u"Chubut",
+    u"Córdoba",
+    u"Corrientes",
+    u"Entre Ríos",
+    u"Formosa",
+    u"Jujuy",
+    u"La Pampa",
+    u"La Rioja",
+    u"Mendoza",
+    u"Misiones",
+    u"Neuquén",
+    u"Río Negro",
+    u"Salta",
+    u"San Juan",
+    u"San Luis",
+    u"Santa Cruz",
+    u"Santa Fe",
+    u"Santiago del Estero",
+    u"Tierra del Fuego",
+    u"Tucumán"
+]
+
+
+class BaseModel(Model):
+    def json(self, include=None, exclude=None):
+        d = super(BaseModel, self).to_dict(include=include, exclude=exclude)
+        for k, v in d.iteritems():
+            if isinstance(v, datetime):
+                d[k] = v.strftime("%Y-%m-%dT%H:%M:%SZ")
+            elif isinstance(v, date):
+                d[k] = v.strftime("%Y-%m-%d")
+        d["id"] = self.key.id()
+        return d
+
+
+class Branch(BaseModel):
+    pass
+
+
+class BranchTopModel(BaseModel):
+    def __init__(self, **kwargs):
+        if "parent" not in kwargs and get_current_branch():
+            kwargs["parent"] = get_current_branch().key
+        super(BranchTopModel, self).__init__(**kwargs)
+
+
+class User(BranchTopModel):
+    email = StringProperty(required=True)
+    roles = StringProperty(repeated=True)
+
+    def __init__(self, **kwargs):
+        kwargs["id"] = kwargs.get("email")
+        super(User, self).__init__(**kwargs)
+
+
+class Patient(BranchTopModel):
+    createdon = DateTimeProperty(required=True, auto_now_add=True)
+    modifiedon = DateTimeProperty(required=True, auto_now=True)
+    firstname = StringProperty(required=True)
+    middlename = StringProperty()
+    surname = StringProperty(required=True)
+    birthdate = DateProperty(required=True)
+    nationality = StringProperty(required=True, choices=NATIONALITIES)
+    cellphone = StringProperty()
+    email = StringProperty()
+    province = StringProperty(required=True, choices=PROVINCES)
+    city = StringProperty(required=True)
+    district = StringProperty()
+    notes = TextProperty()
+
+    def age(self):
+        if self.birthdate:
+            today = date.today()
+            years = today.year - self.birthdate.year - 1
+            if today.month > self.birthdate.month or\
+                    (today.month == self.birthdate.month and today.day >= self.birthdate.day):
+                years += 1
+            return max(0, years)
+        return None
+
+    def json(self, include=None, exclude=None):
+        d = super(Patient, self).json(include=include, exclude=exclude)
+        d["age"] = self.age()
+        return d

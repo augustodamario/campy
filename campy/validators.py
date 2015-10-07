@@ -1,5 +1,6 @@
 # coding: utf-8
 from campy.models import NATIONALITIES
+from campy.models import PROVINCES
 from datetime import datetime
 from wtforms.fields import DateField
 from wtforms.fields import StringField
@@ -43,4 +44,7 @@ class PatientForm(BaseForm):
     nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
     cellphone = StringField(validators=[DataOptional(), Length(min=10)])
     email = StringField(validators=[DataOptional(), Email()])
+    province = StringField(validators=[DataRequired(), AnyOf(values=PROVINCES)])
+    city = StringField(validators=[DataRequired(), Length(min=2)])
+    district = StringField(validators=[DataOptional()])
     notes = StringField(validators=[DataOptional()])
