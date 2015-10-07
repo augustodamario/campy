@@ -38,7 +38,7 @@ class BaseForm(Form):
 
 class PatientForm(BaseForm):
     firstname = StringField(validators=[DataRequired(), Length(min=2)])
-    middlename = StringField(validators=[DataOptional(), Length(min=2)])
+    middlename = StringField(validators=[DataOptional()])
     surname = StringField(validators=[DataRequired(), Length(min=2)])
     birthdate = DateField(validators=[DataRequired()], format="%Y-%m-%d")
     nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
@@ -47,4 +47,12 @@ class PatientForm(BaseForm):
     province = StringField(validators=[DataRequired(), AnyOf(values=PROVINCES)])
     city = StringField(validators=[DataRequired(), Length(min=2)])
     district = StringField(validators=[DataOptional()])
+    relative_firstname = StringField(validators=[DataOptional(), Length(min=2)])
+    relative_middlename = StringField(validators=[DataOptional()])
+    relative_surname = StringField(validators=[DataOptional(), Length(min=2)])
+    relative_relationship = StringField(validators=[DataOptional(), Length(min=2)])
+    relative_cellphone = StringField(validators=[DataOptional(), Length(min=10)])
+    relative_province = StringField(validators=[DataOptional(), AnyOf(values=PROVINCES)], filters=[lambda s: s or None])
+    relative_city = StringField(validators=[DataOptional(), Length(min=2)])
+    relative_district = StringField(validators=[DataOptional()])
     notes = StringField(validators=[DataOptional()])

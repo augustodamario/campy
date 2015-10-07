@@ -124,6 +124,7 @@
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_province}">
                         <label class="control-label" for="relative_province">DIRECCION</label>
                         <select id="relative_province" class="form-control" ng-model="patient.relative_province">
+                            <option></option>
                             {% for province in provinces %}
                                 <option>{= province =}</option>
                             {% endfor %}
