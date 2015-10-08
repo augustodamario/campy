@@ -45,7 +45,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $scope.processing = false;
         $scope.birthdatePicker = {
             isVisible: false,
-            minDate: new Date(1900, 1, 1),
+            minDate: new Date(1900, 0, 1),
             maxDate: new Date(),
             options: {startingDay: 1}
         };
