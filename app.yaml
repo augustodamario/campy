@@ -11,6 +11,7 @@ handlers:
   static_dir: resources
 - url: /.*
   script: main.app
+  secure: always
 
 skip_files:
 - ^(.*/)?#.*#$
