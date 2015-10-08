@@ -263,6 +263,7 @@ PROVINCES = [
     u"Catamarca",
     u"Chaco",
     u"Chubut",
+    u"Ciudad Autónoma de Bs. As.",
     u"Córdoba",
     u"Corrientes",
     u"Entre Ríos",

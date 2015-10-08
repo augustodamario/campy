@@ -146,7 +146,7 @@
             <div class="col-sm-4">
                 <h4><span class="heading">Notas</span></h4>
                 <div class="form-group" ng-class="{'has-error': errors.notes}">
-                    <textarea id="notes" class="form-control" rows="20"></textarea>
+                    <textarea id="notes" class="form-control" rows="20" ng-model="patient.notes"></textarea>
                     <alert class="well-sm" ng-repeat="message in errors.notes" type="danger">{{message}}</alert>
                 </div>
             </div>
