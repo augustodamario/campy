@@ -9,7 +9,7 @@ PYTHON
 3. Dependencies: run
    python -m pip install -r @docs/requirements.txt -t lib
 
-   Delete files and folders:
+   and delete these files and folders
    /lib/*-info
    /lib/_markerlib
    /lib/easy_install.py
@@ -24,8 +24,6 @@ PYTHON
    /lib/zope/deprecation/tests.py
    /lib/zope/interface/common/tests
    /lib/zope/interface/tests
-
-4. Some files may be deleted from the dependencies. Eg: test folders.
 
 
 SASS
