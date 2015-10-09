@@ -2,4 +2,3 @@ pyramid
 pyramid_jinja2
 Jinja2
 WTForms
-WTForms-Appengine

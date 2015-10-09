@@ -9,6 +9,22 @@ PYTHON
 3. Dependencies: run
    python -m pip install -r @docs/requirements.txt -t lib
 
+   Delete files and folders:
+   /lib/*-info
+   /lib/_markerlib
+   /lib/easy_install.py
+   /lib/markupsafe/tests.py
+   /lib/pyramid/tests
+   /lib/pyramid_jinja2/demo/tests.py
+   /lib/pyramid_jinja2/tests
+   /lib/repoze/lru/tests.py
+   /lib/setuptools
+   /lib/translationstring/tests
+   /lib/venusian/tests
+   /lib/zope/deprecation/tests.py
+   /lib/zope/interface/common/tests
+   /lib/zope/interface/tests
+
 4. Some files may be deleted from the dependencies. Eg: test folders.
 
 
