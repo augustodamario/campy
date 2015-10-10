@@ -1,7 +1,7 @@
 # coding: utf-8
 from wtforms.validators import Optional
-from wtforms.validators import ValidationError
 from wtforms.validators import StopValidation
+from wtforms.validators import ValidationError
 
 
 class DataOptional(Optional):
