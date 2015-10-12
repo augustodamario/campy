@@ -52,6 +52,19 @@ $color-back-secondary: #286090;
     }
 }
 
+.section-tabs {
+    padding: 0 0 0 2%;
+    background-color: $color-back-primary;
+
+    a {
+        color: $color-primary;
+    }
+
+    a:hover {
+        color: #555555;
+    }
+}
+
 .section-actions {
     margin: 10px;
 }

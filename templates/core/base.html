@@ -1,0 +1,17 @@
+{% block top %}
+    <div class="section-title h3">
+        {% block section_title %}{% endblock %}
+    </div>
+    <div class="section-tabs">
+        {% block section_tabs %}{% endblock %}
+    </div>
+{% endblock %}
+{% block bottom %}
+    <div class="container">
+        <div class="section-actions text-right">{% block section_actions %}{% endblock %}</div>
+    </div>
+    <div class="section-actions-bottom"></div>
+    <div class="container">
+        {% block section_body %}{%endblock%}
+    </div>
+{% endblock %}

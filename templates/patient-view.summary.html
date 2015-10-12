@@ -1,0 +1,10 @@
+{% extends "core/base-bottom.html" %}
+
+{% block section_actions %}
+    <a class="btn btn-default btn-sm" role="button">Imprimir</a>
+    <a class="btn btn-default btn-sm" ui-sref="patient-edit({id: $stateParams.id})" role="button">Modificar Paciente</a>
+    <a class="btn btn-primary btn-sm" role="button">Nueva Entrevista</a>
+{% endblock %}
+
+{% block section_body %}
+{% endblock %}

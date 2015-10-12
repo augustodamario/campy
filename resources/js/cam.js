@@ -19,9 +19,20 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
                 controller: "PatientProfileController"
             })
             .state("patient-view", {
+                abstract: true,
                 url: "/paciente/{id:int}",
                 templateUrl: "templates/patient-view.html",
                 controller: "PatientViewController"
+            })
+            .state('patient-view.summary', {
+              url: "",
+              templateUrl: "templates/patient-view.summary.html",
+              controller: "PatientViewSummaryController"
+            })
+            .state('patient-view.chronology', {
+              url: "/cronologia",
+              templateUrl: "templates/patient-view.chronology.html",
+              controller: "PatientViewChronologyController"
             })
             .state("patient-edit", {
                 url: "/paciente/{id:int}/modificar",
@@ -44,9 +55,12 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         }
         $scope.removePatientLink = function(num) {
             var removed = $scope.patientLinks.splice(num, 1)[0];
-            if ($scope.$state.includes("patient-view", {id: removed.id})) {
+            if ($scope.isPatientLinkActive(removed.id)) {
                 $scope.$state.go("patients-last");
             }
+        }
+        $scope.isPatientLinkActive = function(id) {
+            return $scope.$state.includes("patient-view", {id: id});
         }
     }])
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {
@@ -70,7 +84,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $scope.errors = {};
         $scope.cancel = function() {
             if ($scope.$stateParams.id) {
-                $scope.$state.go("patient-view", {id: $scope.$stateParams.id});
+                $scope.$state.go("patient-view.summary", {id: $scope.$stateParams.id});
             } else {
                 $scope.$state.go("patients-last");
             }
@@ -82,7 +96,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             $http.post(url, patient).then(function(response) {
                 $scope.errors = {};
                 $scope.processing = false;
-                $scope.$state.go("patient-view", response.data);
+                $scope.$state.go("patient-view.summary", response.data);
             }, function(response) {
                 $scope.errors = response.data;
                 $scope.processing = false;
@@ -90,8 +104,16 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         }
     }])
     .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
+        $scope.tabs = {
+            summary: $scope.$state.is("patient-view.summary"),
+            chronology: $scope.$state.is("patient-view.chronology")
+        };
         $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {
             var patient = $scope.patient = response.data;
             $scope.$parent.addPatientLink(patient.id, patient.firstname + " " + patient.surname);
         });
+    }])
+    .controller("PatientViewSummaryController", ["$scope", function($scope) {
+    }])
+    .controller("PatientViewChronologyController", ["$scope", function($scope) {
     }]);

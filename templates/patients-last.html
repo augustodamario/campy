@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
 {% block section_title %}Pacientes Recientes{% endblock %}
 
@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="patient in patients" ng-click="$state.go('patient-view', {id: patient.id})">
+                <tr ng-repeat="patient in patients" ng-click="$state.go('patient-view.summary', {id: patient.id})">
                     <td><img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/></td>
                     <td>{{ patient.firstname }}</td>
                     <td>{{ patient.surname }}</td>

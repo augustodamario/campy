@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 
 {% block section_title %}
     <img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/>
@@ -8,11 +8,13 @@
     <small>{{ patient.email }}</small>
 {% endblock %}
 
-{% block section_actions %}
-    <a class="btn btn-default btn-sm" role="button">Imprimir</a>
-    <a class="btn btn-default btn-sm" ui-sref="patient-edit({id: $stateParams.id})" role="button">Modificar Paciente</a>
-    <a class="btn btn-primary btn-sm" role="button">Nueva Entrevista</a>
+{% block section_tabs %}
+    <tabset>
+        <tab heading="Resumen" active="tab.summary" select="$state.go('patient-view.summary')"></tab>
+        <tab heading="Cronología" active="tab.chronology" select="$state.go('patient-view.chronology')"></tab>
+    </tabset>
 {% endblock %}
 
-{% block section_body %}
+{% block bottom %}
+    <div ui-view></div>
 {% endblock %}
