@@ -21,7 +21,7 @@
             <span class="system">{{ Session.name }} | CAM {= request.branch.name =} | <a href="/salir">Salir</a></span>
             <a ui-sref="patients-last">Pacientes Recientes</a>
             <span ng-repeat="patientLink in patientLinks">
-                <span class="patient-link">
+                <span class="patient-link" ui-sref-active="active">
                     <a ui-sref="patient-view({id: patientLink.id})">{{ patientLink.name }}</a>
                     <a class="link-close" ng-click="removePatientLink($index)" title="Quitar marcador">X</a>
                 </span>

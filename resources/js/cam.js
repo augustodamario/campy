@@ -10,19 +10,23 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $stateProvider
             .state("patients-last", {
                 url: "/pacientes/ultimos",
-                templateUrl: "templates/patients-last.html"
+                templateUrl: "templates/patients-last.html",
+                controller: "PatientsLastController"
             })
             .state("patient-new", {
                 url: "/paciente/nuevo",
-                templateUrl: "templates/patient-profile.html"
+                templateUrl: "templates/patient-profile.html",
+                controller: "PatientProfileController"
             })
             .state("patient-view", {
                 url: "/paciente/{id:int}",
-                templateUrl: "templates/patient-view.html"
+                templateUrl: "templates/patient-view.html",
+                controller: "PatientViewController"
             })
             .state("patient-edit", {
                 url: "/paciente/{id:int}/modificar",
-                templateUrl: "templates/patient-profile.html"
+                templateUrl: "templates/patient-profile.html",
+                controller: "PatientProfileController"
             });
     }])
     .service("Session", function() {
