@@ -31,6 +31,17 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         this.set = function(obj) {angular.extend(this, obj);}
         this.hasRole = function(role) {return !!this.roles && this.roles.indexOf(role) >= 0;}
     })
+    .controller("AppController", ["$scope", function($scope) {
+        $scope.patientLinks = [];
+        $scope.addPatientLink = function(id, name) {
+            if (!$scope.patientLinks.some(function(p) {return p.id === id;})) {
+                $scope.patientLinks.push({id: id, name: name});
+            }
+        }
+        $scope.removePatientLink = function(num) {
+            $scope.patientLinks.splice(num, 1);
+        }
+    }])
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {
         $scope.patients = [];
         $http.get("api/patients/last").then(function(response) {$scope.patients = response.data;});
@@ -72,5 +83,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         }
     }])
     .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
-        $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {$scope.patient = response.data;});
+        $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {
+            var patient = $scope.patient = response.data;
+            $scope.$parent.addPatientLink(patient.id, patient.firstname + " " + patient.surname);
+        });
     }]);

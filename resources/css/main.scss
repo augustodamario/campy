@@ -13,6 +13,27 @@ $color-back-secondary: #286090;
 // Sections
 .section-menubar {
     padding: 0 10px;
+
+    .patient-link {
+        background-color: $color-back-primary;
+        border-radius: 10px;
+        margin: 0 2px;
+        padding: 0 5px;
+        white-space: nowrap;
+
+        a {
+            cursor: pointer;
+            color: $color-primary;
+        }
+
+        .link-close {
+            padding-left: 0.3em;
+        }
+    }
+
+    .system {
+        float: right;
+    }
 }
 
 .section-title {
@@ -50,10 +71,6 @@ h4 {
 
 textarea {
     resize: none;
-}
-
-.logout {
-    float: right;
 }
 
 .table-hover {

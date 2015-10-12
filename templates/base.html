@@ -1,7 +1,3 @@
-<div class="section-menubar">
-    <a ui-sref="patients-last">Pacientes Recientes</a>
-    <span class="logout">{{ Session.name }} | CAM {= request.branch.name =} | <a href="/salir">Salir</a></span>
-</div>
 <div ng-controller="{% block section_controller %}{% endblock %}">
     <div class="section-title h3">
         {% block section_title %}{% endblock %}

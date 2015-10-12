@@ -2,8 +2,10 @@
 from campy.security import get_current_branch
 from datetime import date
 from datetime import datetime
+from google.appengine.ext.ndb import BooleanProperty
 from google.appengine.ext.ndb import DateProperty
 from google.appengine.ext.ndb import DateTimeProperty
+from google.appengine.ext.ndb import IntegerProperty
 from google.appengine.ext.ndb import Model
 from google.appengine.ext.ndb import StringProperty
 from google.appengine.ext.ndb import TextProperty
@@ -356,3 +358,19 @@ class Patient(BranchTopModel):
         d = super(Patient, self).json(include=include, exclude=exclude)
         d["age"] = self.age()
         return d
+
+
+class Observation(BaseModel):
+    OBSERVATION_TYPES = [
+        u"Entrevista presencial",
+        u"Seguimiento telefónico"
+    ]
+    type = StringProperty(required=True, choices=OBSERVATION_TYPES)
+    date = DateProperty(required=True)
+    companion_relationship = StringProperty()
+    relative_firstname = StringProperty()
+    relative_surname = StringProperty()
+    learned_about_center = StringProperty()
+    detail = StringProperty()
+    pregnancy_confirmed = BooleanProperty()
+    pregnancy_length_weeks = IntegerProperty()
