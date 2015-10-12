@@ -43,7 +43,10 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             }
         }
         $scope.removePatientLink = function(num) {
-            $scope.patientLinks.splice(num, 1);
+            var removed = $scope.patientLinks.splice(num, 1)[0];
+            if ($scope.$state.includes("patient-view", {id: removed.id})) {
+                $scope.$state.go("patients-last");
+            }
         }
     }])
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {

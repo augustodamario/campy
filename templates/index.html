@@ -23,7 +23,7 @@
             <span ng-repeat="patientLink in patientLinks">
                 <span class="patient-link" ui-sref-active="active">
                     <a ui-sref="patient-view({id: patientLink.id})">{{ patientLink.name }}</a>
-                    <a class="link-close" ng-click="removePatientLink($index)" title="Quitar marcador">X</a>
+                    <a class="link-close" ng-click="removePatientLink($index)" title="Cerrar">X</a>
                 </span>
             </span>
         </div>
