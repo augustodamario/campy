@@ -365,6 +365,31 @@ class Observation(BaseModel):
         u"Entrevista presencial",
         u"Seguimiento telefónico"
     ]
+    PREGNANCY_CONFIRMATION_METHODS = [
+        u"Análisis de sangre",
+        u"Ecografía",
+        u"Síntomas",
+        u"Test de orina"
+    ]
+    ABORTION_TYPES = [
+        u"Espontáneo",
+        u"Provocado"
+    ]
+    ABORTION_METHODS = [
+        u"Intervención médica",
+        u"Píldora abortiva",
+        u"OTRO"
+    ]
+    ABORTION_PILLS = [
+        u"Misoprostol",
+        u"Pastilla del día después",
+        u"OTRO"
+    ]
+    SMOKER_TYPE = [
+        u"No fumadora",
+        u"Fumadora ocasional",
+        u"Fumadora diaria"
+    ]
     type = StringProperty(required=True, choices=OBSERVATION_TYPES)
     date = DateProperty(required=True)
     companion_relationship = StringProperty()
