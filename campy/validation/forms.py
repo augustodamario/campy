@@ -3,6 +3,7 @@ from campy.models import NATIONALITIES
 from campy.models import PROVINCES
 from campy.validation.validators import DataOptional
 from campy.validation.validators import DateRange
+from campy.validation.validators import Telephone
 from datetime import date
 from wtforms.fields import DateField
 from wtforms.fields import StringField
@@ -21,14 +22,17 @@ class BaseForm(Form):
 class PatientForm(BaseForm):
     firstname = StringField(validators=[DataRequired(), Length(min=2)])
     middlename = StringField(validators=[DataOptional()])
-    surname = StringField(validators=[DataRequired(), Length(min=2)])
+    surname = StringField(validators=[DataOptional(), Length(min=2)])
     birthdate = DateField(validators=[DataRequired(), DateRange(min=date(1900, 1, 1), max=date.today())],
                           format="%Y-%m-%d")
     nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
-    cellphone = StringField(validators=[DataOptional(), Length(min=10)])
+    occupation = StringField(validators=[DataRequired(), Length(min=3)])
+    cellphone = StringField(validators=[DataOptional(), Telephone()])
+    cellphone2 = StringField(validators=[DataOptional(), Telephone()])
+    telephone = StringField(validators=[DataOptional(), Telephone()])
     email = StringField(validators=[DataOptional(), Email()])
-    province = StringField(validators=[DataRequired(), AnyOf(values=PROVINCES)])
-    city = StringField(validators=[DataRequired(), Length(min=2)])
+    province = StringField(validators=[DataOptional(), AnyOf(values=PROVINCES)])
+    city = StringField(validators=[DataOptional(), Length(min=2)])
     district = StringField(validators=[DataOptional()])
     relative_firstname = StringField(validators=[DataOptional(), Length(min=2)])
     relative_middlename = StringField(validators=[DataOptional()])

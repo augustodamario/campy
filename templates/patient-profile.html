@@ -25,7 +25,7 @@
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.surname}">
                         <label class="control-label" for="surname">&nbsp;</label>
-                        <input id="surname" class="form-control" type="text" ng-model="patient.surname" placeholder="Apellido"/>
+                        <input id="surname" class="form-control" type="text" ng-model="patient.surname" placeholder="Apellido (Opcional)"/>
                         <alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{message}}</alert>
                     </div>
                 </div>
@@ -54,14 +54,31 @@
                         </select>
                         <alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{message}}</alert>
                     </div>
+                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.occupation}">
+                        <label class="control-label" for="occupation">OCUPACIÓN *</label>
+                        <input id="occupation" class="form-control" type="text" ng-model="patient.occupation"/>
+                        <alert class="well-sm" ng-repeat="message in errors.occupation" type="danger">{{message}}</alert>
+                    </div>
                 </div>
                 <h4><span class="heading">Información de contacto</span></h4>
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone}">
-                        <label class="control-label" for="cellphone">CELULAR</label>
-                        <input id="cellphone" class="form-control" type="text" ng-model="patient.cellphone"/>
+                        <label class="control-label" for="cellphone">CELULAR 1 (Turno) *</label>
+                        <input id="cellphone" class="form-control" type="text" ng-model="patient.cellphone" placeholder="ej: 11 5467 2345 (sin 15)"/>
                         <alert class="well-sm" ng-repeat="message in errors.cellphone" type="danger">{{message}}</alert>
                     </div>
+                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone2}">
+                        <label class="control-label" for="cellphone2">CELULAR 2</label>
+                        <input id="cellphone2" class="form-control" type="text" ng-model="patient.cellphone2" placeholder="ej: 11 5467 2345 (sin 15)"/>
+                        <alert class="well-sm" ng-repeat="message in errors.cellphone2" type="danger">{{message}}</alert>
+                    </div>
+                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.telephone}">
+                        <label class="control-label" for="telephone">TEL. FIJO</label>
+                        <input id="telephone" class="form-control" type="text" ng-model="patient.telephone" placeholder="ej: 11 4565 6756"/>
+                        <alert class="well-sm" ng-repeat="message in errors.telephone" type="danger">{{message}}</alert>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.email}">
                         <label class="control-label" for="email">EMAIL</label>
                         <input id="email" class="form-control" type="text" ng-model="patient.email"/>
@@ -70,8 +87,9 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.province}">
-                        <label class="control-label" for="province">DIRECCION *</label>
+                        <label class="control-label" for="province">DIRECCION</label>
                         <select id="province" class="form-control" ng-model="patient.province">
+                            <option></option>
                             {% for province in provinces %}
                                 <option>{= province =}</option>
                             {% endfor %}
@@ -85,7 +103,7 @@
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.district}">
                         <label class="control-label" for="district">&nbsp;</label>
-                        <input id="district" class="form-control" type="text" ng-model="patient.district" placeholder="Barrio (Opcional)"/>
+                        <input id="district" class="form-control" type="text" ng-model="patient.district" placeholder="Barrio"/>
                         <alert class="well-sm" ng-repeat="message in errors.district" type="danger">{{message}}</alert>
                     </div>
                 </div>
@@ -98,7 +116,7 @@
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_middlename}">
                         <label class="control-label" for="relative_middlename">&nbsp;</label>
-                        <input id="relative_middlename" class="form-control" type="text" ng-model="patient.relative_middlename" placeholder="Segundo nombre (Opcional)"/>
+                        <input id="relative_middlename" class="form-control" type="text" ng-model="patient.relative_middlename" placeholder="Segundo nombre"/>
                         <alert class="well-sm" ng-repeat="message in errors.relative_middlename" type="danger">{{message}}</alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_surname}">
@@ -137,7 +155,7 @@
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_district}">
                         <label class="control-label" for="relative_district">&nbsp;</label>
-                        <input id="relative_district" class="form-control" type="text" ng-model="patient.relative_district" placeholder="Barrio (Opcional)"/>
+                        <input id="relative_district" class="form-control" type="text" ng-model="patient.relative_district" placeholder="Barrio"/>
                         <alert class="well-sm" ng-repeat="message in errors.relative_district" type="danger">{{message}}</alert>
                     </div>
                 </div>

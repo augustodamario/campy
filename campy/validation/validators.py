@@ -1,4 +1,5 @@
 # coding: utf-8
+import re
 from wtforms.validators import Optional
 from wtforms.validators import StopValidation
 from wtforms.validators import ValidationError
@@ -32,3 +33,23 @@ class DateRange(object):
                 message = u"La fecha debe estar entre el %s y el %s." %\
                           (self.min.strftime(self.__DATE_FORMAT), self.max.strftime(self.__DATE_FORMAT))
             raise ValidationError(message)
+
+
+class Telephone(object):
+    __PATTERN = re.compile("^[0-9]{10,}$", 0)
+    __MESSAGE = u"El campo debe tener al menos 10 números (acepta espacios)"
+
+    def __init__(self, message=None):
+        self.__message = message or self.__MESSAGE
+
+    def __call__(self, form, field, message=None):
+        text = field.data or ""
+        match = self.__PATTERN.match(text.replace(" ", ""))
+        if not match:
+            if message is None:
+                if self.__message is None:
+                    message = field.gettext("Invalid input.")
+                else:
+                    message = self.__message
+            raise ValidationError(message)
+        return match
