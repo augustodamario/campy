@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.record}">
                         <label class="control-label" for="record">Nº DE FICHA</label>
-                        <input id="record" class="form-control" type="text" ng-model="patient.record"/>
+                        <input id="record" class="form-control" type="text" ng-model="patient.record" placeholder="Automático"/>
                         <alert class="well-sm" ng-repeat="message in errors.record" type="danger">{{message}}</alert>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                 <h4><span class="heading">Información de contacto</span></h4>
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone}">
-                        <label class="control-label" for="cellphone">CELULAR 1 (Turno) *</label>
+                        <label class="control-label" for="cellphone">CELULAR 1 (Turno)</label>
                         <input id="cellphone" class="form-control" type="text" ng-model="patient.cellphone" placeholder="ej: 11 5467 2345 (sin 15)"/>
                         <alert class="well-sm" ng-repeat="message in errors.cellphone" type="danger">{{message}}</alert>
                     </div>

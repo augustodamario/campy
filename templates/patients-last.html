@@ -12,8 +12,8 @@
             <thead>
                 <tr>
                     <th></th>
+                    <th>Nº DE FICHA</th>
                     <th>NOMBRE</th>
-                    <th>APELLIDO</th>
                     <th>FECHA NACIMIENTO</th>
                     <th>CONTACTO</th>
                     <th>ACCEDIDO</th>
@@ -22,8 +22,8 @@
             <tbody>
                 <tr ng-repeat="patient in patients" ng-click="$state.go('patient-view.summary', {id: patient.id})">
                     <td><img class="img-rounded" src="/resources/img/avatar.jpg" alt=""/></td>
-                    <td>{{ patient.firstname }}</td>
-                    <td>{{ patient.surname }}</td>
+                    <td>{{ patient.record }}</td>
+                    <td>{{ patient.firstname }} {{ patient.surname }}</td>
                     <td>{{ patient.birthdate | date: "d MMM yy" }}<br/>{{ patient.age }} años</td>
                     <td>{{ patient.cellphone }}<br/>{{ patient.email }}</td>
                     <td>{{ patient.modifiedon | date: "H" }} hs<br/>{{ patient.modifiedon | date: "dd/MM/yy" }}</td>

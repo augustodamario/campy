@@ -75,5 +75,5 @@ def api_patient_edit(request):
 @handle_rest
 @require_any_role
 def api_patients_last(request):
-    attributes = ["id", "modifiedon", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
+    attributes = ["id", "modifiedon", "record", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
     return [p.json(include=attributes) for p in Patient.query(ancestor=request.branch.key).order(-Patient.modifiedon)]
