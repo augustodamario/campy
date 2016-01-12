@@ -1,4 +1,5 @@
 # coding: utf-8
+from campy.security import get_current_branch
 import re
 from wtforms.validators import Optional
 from wtforms.validators import StopValidation
@@ -10,6 +11,19 @@ class DataOptional(Optional):
         if not field.data or isinstance(field.data[0], basestring) and not self.string_check(field.data[0]):
             field.errors[:] = []
             raise StopValidation()
+
+
+class DataAuto(object):
+    def __init__(self, cls):
+        self.cls = cls
+
+    def __call__(self, form, field):
+        if field.data is None:
+            cls = self.cls
+            prop = field.name
+            ancestor = get_current_branch().key
+            results = cls.query(ancestor=ancestor).order(-getattr(cls, prop)).fetch(1, projection=[prop])
+            field.data = (getattr(results[0], prop) + 1) if results else 1
 
 
 class DateRange(object):

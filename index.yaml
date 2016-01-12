@@ -15,3 +15,14 @@ indexes:
   properties:
   - name: modifiedon
     direction: desc
+
+- kind: Patient
+  ancestor: yes
+  properties:
+  - name: record
+
+- kind: Patient
+  ancestor: yes
+  properties:
+  - name: record
+    direction: desc

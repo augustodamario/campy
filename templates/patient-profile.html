@@ -13,6 +13,13 @@
             <div class="col-sm-8">
                 <h4><span class="heading">Información del paciente</span></h4>
                 <div class="row">
+                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.record}">
+                        <label class="control-label" for="record">Nº DE FICHA</label>
+                        <input id="record" class="form-control" type="text" ng-model="patient.record"/>
+                        <alert class="well-sm" ng-repeat="message in errors.record" type="danger">{{message}}</alert>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.firstname}">
                         <label class="control-label" for="firstname">NOMBRE *</label>
                         <input id="firstname" class="form-control" type="text" ng-model="patient.firstname" placeholder="Primer nombre"/>
@@ -105,58 +112,6 @@
                         <label class="control-label" for="district">&nbsp;</label>
                         <input id="district" class="form-control" type="text" ng-model="patient.district" placeholder="Barrio"/>
                         <alert class="well-sm" ng-repeat="message in errors.district" type="danger">{{message}}</alert>
-                    </div>
-                </div>
-                <h4><span class="heading">Familiar más cercano</span></h4>
-                <div class="row">
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_firstname}">
-                        <label class="control-label" for="relative_firstname">NOMBRE</label>
-                        <input id="relative_firstname" class="form-control" type="text" ng-model="patient.relative_firstname" placeholder="Primer nombre"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_firstname" type="danger">{{message}}</alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_middlename}">
-                        <label class="control-label" for="relative_middlename">&nbsp;</label>
-                        <input id="relative_middlename" class="form-control" type="text" ng-model="patient.relative_middlename" placeholder="Segundo nombre"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_middlename" type="danger">{{message}}</alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_surname}">
-                        <label class="control-label" for="relative_surname">&nbsp;</label>
-                        <input id="relative_surname" class="form-control" type="text" ng-model="patient.relative_surname" placeholder="Apellido"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_surname" type="danger">{{message}}</alert>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_relationship}">
-                        <label class="control-label" for="relative_relationship">RELACIÓN / PARENTESCO</label>
-                        <input id="relative_relationship" class="form-control" type="text" ng-model="patient.relative_relationship"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_relationship" type="danger">{{message}}</alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_cellphone}">
-                        <label class="control-label" for="relative_cellphone">CELULAR</label>
-                        <input id="relative_cellphone" class="form-control" type="text" ng-model="patient.relative_cellphone"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_cellphone" type="danger">{{message}}</alert>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_province}">
-                        <label class="control-label" for="relative_province">DIRECCION</label>
-                        <select id="relative_province" class="form-control" ng-model="patient.relative_province">
-                            <option></option>
-                            {% for province in provinces %}
-                                <option>{= province =}</option>
-                            {% endfor %}
-                        </select>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_province" type="danger">{{message}}</alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_city}">
-                        <label class="control-label" for="relative_city">&nbsp;</label>
-                        <input id="relative_city" class="form-control" type="text" ng-model="patient.relative_city" placeholder="Ciudad"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_city" type="danger">{{message}}</alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.relative_district}">
-                        <label class="control-label" for="relative_district">&nbsp;</label>
-                        <input id="relative_district" class="form-control" type="text" ng-model="patient.relative_district" placeholder="Barrio"/>
-                        <alert class="well-sm" ng-repeat="message in errors.relative_district" type="danger">{{message}}</alert>
                     </div>
                 </div>
             </div>

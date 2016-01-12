@@ -324,6 +324,7 @@ class User(BranchTopModel):
 class Patient(BranchTopModel):
     createdon = DateTimeProperty(required=True, auto_now_add=True)
     modifiedon = DateTimeProperty(required=True, auto_now=True)
+    record = IntegerProperty(required=True)
     firstname = StringProperty(required=True)
     middlename = StringProperty()
     surname = StringProperty()
