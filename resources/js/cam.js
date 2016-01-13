@@ -1,10 +1,14 @@
 angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
+
+
     .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
         $rootScope.Session = Session;
         $http.get("api/user").then(function(response) {Session.set(response.data);});
     }])
+
+
     .config(["$urlRouterProvider", "$stateProvider", function($urlRouterProvider, $stateProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
         $stateProvider
@@ -40,12 +44,16 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
                 controller: "PatientProfileController"
             });
     }])
+
+
     .service("Session", function() {
         this.ROLE_ADVISOR = "advisor";
         this.ROLE_SYSTEM_ADMINISTRATOR = "system administrator";
         this.set = function(obj) {angular.extend(this, obj);}
         this.hasRole = function(role) {return !!this.roles && this.roles.indexOf(role) >= 0;}
     })
+
+
     .controller("AppController", ["$scope", function($scope) {
         $scope.patientLinks = [];
         $scope.addPatientLink = function(id, name) {
@@ -63,10 +71,14 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             return $scope.$state.includes("patient-view", {id: id});
         }
     }])
+
+
     .controller("PatientsLastController", ["$scope", "$http", function($scope, $http) {
         $scope.patients = [];
         $http.get("api/patients/last").then(function(response) {$scope.patients = response.data;});
     }])
+
+
     .controller("PatientProfileController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         var url = "api/patient";
         $scope.patient = {};
@@ -74,9 +86,12 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             url += "/" + $scope.$stateParams.id;
             $http.get(url).then(function(response) {$scope.patient = response.data;});
         }
+
         $scope.advisors = [];
         $http.get("api/users/advisors").then(function(response) {$scope.advisors = response.data;});
+
         $scope.processing = false;
+        $scope.isAdvisorEditable = false;
         $scope.birthdatePicker = {
             isVisible: false,
             minDate: new Date(1900, 0, 1),
@@ -84,6 +99,12 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             options: {startingDay: 1}
         };
         $scope.errors = {};
+
+        $scope.editAdvisor = function() {
+            $scope.patient.advisor = null;
+            $scope.isAdvisorEditable = true;
+        }
+
         $scope.cancel = function() {
             if ($scope.$stateParams.id) {
                 $scope.$state.go("patient-view.summary", {id: $scope.$stateParams.id});
@@ -91,6 +112,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
                 $scope.$state.go("patients-last");
             }
         }
+
         $scope.save = function() {
             $scope.processing = true;
             var patient = angular.merge({}, $scope.patient);
@@ -105,6 +127,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             });
         }
     }])
+
+
     .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
         $scope.tabs = {
             summary: $scope.$state.is("patient-view.summary"),
@@ -116,7 +140,11 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             $scope.$parent.addPatientLink(patient.id, name);
         });
     }])
+
+
     .controller("PatientViewSummaryController", ["$scope", function($scope) {
     }])
+
+
     .controller("PatientViewChronologyController", ["$scope", function($scope) {
     }]);

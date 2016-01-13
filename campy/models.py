@@ -1,5 +1,4 @@
 # coding: utf-8
-from campy.security import get_current_branch
 from datetime import date
 from datetime import datetime
 from google.appengine.ext.ndb import BooleanProperty
@@ -289,7 +288,17 @@ PROVINCES = [
 ]
 
 
+class _Roles(object):
+    SYSTEM_ADMINISTRATOR = "system administrator"
+    SECRETARY = "secretary"
+    ADVISOR = "advisor"
+roles = _Roles
+
+
 class BaseModel(Model):
+    def id(self):
+        return self.key and self.key.id()
+
     def json(self, include=None, exclude=None):
         d = super(BaseModel, self).to_dict(include=include, exclude=exclude)
         for k, v in d.iteritems():
@@ -297,7 +306,7 @@ class BaseModel(Model):
                 d[k] = v.strftime("%Y-%m-%dT%H:%M:%SZ")
             elif isinstance(v, date):
                 d[k] = v.strftime("%Y-%m-%d")
-        d["id"] = self.key.id()
+        d["id"] = self.id()
         return d
 
 
@@ -305,14 +314,7 @@ class Branch(BaseModel):
     name = StringProperty(required=True)
 
 
-class BranchTopModel(BaseModel):
-    def __init__(self, **kwargs):
-        if "parent" not in kwargs and get_current_branch():
-            kwargs["parent"] = get_current_branch().key
-        super(BranchTopModel, self).__init__(**kwargs)
-
-
-class User(BranchTopModel):
+class User(BaseModel):
     name = StringProperty(required=True)
     email = StringProperty(required=True)
     roles = StringProperty(repeated=True)
@@ -328,7 +330,7 @@ class Advisor(Model):
     name = StringProperty(required=True)
 
 
-class Patient(BranchTopModel):
+class Patient(BaseModel):
     createdon = DateTimeProperty(required=True, auto_now_add=True)
     modifiedon = DateTimeProperty(required=True, auto_now=True)
     record = IntegerProperty(required=True)
@@ -365,6 +367,9 @@ class Patient(BranchTopModel):
                 years += 1
             return max(0, years)
         return None
+
+    def has_advisor(self, user):
+        return self.advisor and self.advisor.id == user.id()
 
     def json(self, include=None, exclude=None):
         d = super(Patient, self).json(include=include, exclude=exclude)

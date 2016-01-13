@@ -1,7 +1,10 @@
 # coding: utf-8
 from campy.models import Patient
+from campy.models import roles
 from campy.security import handle_rest
 from campy.security import require_any_role
+from campy.security import require_role
+from campy.security import UnauthorizedException
 from campy.services import get_patient
 from campy.services import list_last_patients
 from campy.services import list_users
@@ -32,21 +35,17 @@ def api_user_current(request):
 @handle_rest
 @require_any_role
 def api_users_advisors(request):
-    # TODO remove
-    # return [{"id":"a@b","name":"A B"}]
-    users = list_users(request.branch)
-    users.sort(key=lambda u: u.name.lower())
-    return [u.json(include=["id", "name"]) for u in users]
+    return [u.json(include=["id", "name"]) for u in list_users(request.branch, roles.ADVISOR)]
 
 
 @view_config(route_name="api-patient-new", renderer="json")
 @handle_rest
-@require_any_role
+@require_role(roles.SYSTEM_ADMINISTRATOR, roles.SECRETARY)
 def api_patient_new(request):
     form = PatientForm(data=request.json_body)
     if not form.validate():
         raise HTTPBadRequest(json=form.errors)
-    patient = Patient()
+    patient = Patient(parent=request.branch.key)
     form.populate_obj(patient)
     key = patient.put()
     return {"id": key.id()}
@@ -63,6 +62,9 @@ def api_patient(request):
     patient = get_patient(request.branch, pid)
     if not patient:
         raise HTTPNotFound(json={})
+    rs = request.user.roles
+    if roles.SYSTEM_ADMINISTRATOR not in rs and roles.SECRETARY not in rs and not patient.has_advisor(request.user):
+        raise UnauthorizedException
     return patient.json()
 
 
@@ -80,6 +82,9 @@ def api_patient_edit(request):
     patient = get_patient(request.branch, pid)
     if not patient:
         raise HTTPNotFound(json={})
+    rs = request.user.roles
+    if roles.SYSTEM_ADMINISTRATOR not in rs and roles.SECRETARY not in rs and not patient.has_advisor(request.user):
+        raise UnauthorizedException
     form.populate_obj(patient)
     key = patient.put()
     return {"id": key.id()}
@@ -89,5 +94,12 @@ def api_patient_edit(request):
 @handle_rest
 @require_any_role
 def api_patients_last(request):
+    uroles = request.user.roles
+    if roles.SYSTEM_ADMINISTRATOR in uroles or roles.SECRETARY in uroles:
+        advisor = None
+    elif roles.ADVISOR in uroles:
+        advisor = request.user
+    else:
+        return []
     attributes = ["id", "modifiedon", "record", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
-    return [p.json(include=attributes) for p in list_last_patients(request.branch)]
+    return [p.json(include=attributes) for p in list_last_patients(request.branch, advisor)]

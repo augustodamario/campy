@@ -1,4 +1,7 @@
 # coding: utf-8
+from campy.models import roles
+from campy.models import User
+from campy.services import get_user
 from functools import wraps
 from google.appengine.api import users
 from google.appengine.ext.ndb import Key
@@ -10,26 +13,6 @@ import threading
 
 
 _session = threading.local()
-
-
-class _User(object):
-    def __init__(self, a_name, a_email, a_roles):
-        self.name = a_name
-        self.email = a_email
-        self.roles = a_roles
-
-    def json(self):
-        return {
-            "name": self.name,
-            "email": self.email,
-            "roles": self.roles
-        }
-
-
-class _Roles(object):
-    SYSTEM_ADMINISTRATOR = "system administrator"
-    ADVISOR = "advisor"
-roles = _Roles
 
 
 class UnauthorizedException(Exception):
@@ -60,17 +43,19 @@ def session_tween_factory(handler, registry):
         _user = None
         g_user = users.get_current_user()
         if g_user:
+            _parent = None
             _email = g_user.email()
             _roles = []
             _name = _email
             if users.is_current_user_admin():
                 _roles.append(roles.SYSTEM_ADMINISTRATOR)
             if request.branch:
-                c_user = Key("User", _email, parent=request.branch.key).get()
+                _parent = request.branch.key
+                c_user = get_user(request.branch, _email)
                 if c_user:
-                    _roles.extend(c_user.roles)
                     _name = c_user.name
-            _user = _User(_name, _email, _roles)
+                    _roles.extend(c_user.roles)
+            _user = User(parent=_parent, name=_name, email=_email, roles=_roles)
         request.user = _session.user = _user
         return handler(request)
     return tween

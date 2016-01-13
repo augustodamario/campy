@@ -1,9 +1,9 @@
 # coding: utf-8
 from campy.models import Branch
+from campy.models import roles
 from campy.models import User
 from campy.security import require_login
 from campy.security import require_role
-from campy.security import roles
 from google.appengine.api import users
 from google.appengine.ext.ndb import Key
 from pyramid.httpexceptions import HTTPFound
@@ -34,7 +34,7 @@ def initialize(request):
     key = Key(Branch, "caba")
     if not key.get():
         Branch(key=key, name=u"Capital").put()
-        u_roles = [roles.ADVISOR]
+        u_roles = [roles.SECRETARY, roles.ADVISOR]
         User(parent=key, name=u"Juan Prueba", email="test@example.com", roles=u_roles).put()
         User(parent=key, name=u"Augusto D'Amario", email="augustodamario@gmail.com", roles=u_roles).put()
         User(parent=key, name=u"Julio Veronelli", email="julio.veronelli@crossknight.com.ar", roles=u_roles).put()

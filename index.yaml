@@ -13,6 +13,13 @@ indexes:
 - kind: Patient
   ancestor: yes
   properties:
+  - name: advisor.id
+  - name: modifiedon
+    direction: desc
+
+- kind: Patient
+  ancestor: yes
+  properties:
   - name: modifiedon
     direction: desc
 
