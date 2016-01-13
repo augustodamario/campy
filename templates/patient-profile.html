@@ -114,6 +114,17 @@
                         <alert class="well-sm" ng-repeat="message in errors.district" type="danger">{{message}}</alert>
                     </div>
                 </div>
+                <h4><span class="heading">Orientación</span></h4>
+                <div class="row">
+                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.advisor}">
+                        <label class="control-label" for="advisor">ORIENTADORA</label>
+                        <select id="advisor" class="form-control" ng-model="patient.advisor"
+                                ng-options="advisor as advisor.name for advisor in advisors track by advisor.id">
+                            <option></option>
+                        </select>
+                        <alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{message}}</alert>
+                    </div>
+                </div>
             </div>
             <div class="col-sm-4">
                 <h4><span class="heading">Notas</span></h4>

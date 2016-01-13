@@ -1,13 +1,16 @@
 # coding: utf-8
+from campy.models import Advisor
 from campy.models import NATIONALITIES
 from campy.models import Patient
 from campy.models import PROVINCES
 from campy.validation.validators import DataAuto
 from campy.validation.validators import DataOptional
 from campy.validation.validators import DateRange
+from campy.validation.validators import Entity
 from campy.validation.validators import Telephone
 from datetime import date
 from wtforms.fields import DateField
+from wtforms.fields import Field
 from wtforms.fields import IntegerField
 from wtforms.fields import StringField
 from wtforms.form import Form
@@ -21,6 +24,11 @@ from wtforms.validators import NumberRange
 class BaseForm(Form):
     class Meta:
         locales = ["es_AR", "es"]
+
+
+class AdvisorForm(BaseForm):
+    id = StringField(validators=[DataRequired()])
+    name = StringField(validators=[DataRequired()])
 
 
 class PatientForm(BaseForm):
@@ -39,9 +47,11 @@ class PatientForm(BaseForm):
     province = StringField(validators=[DataOptional(), AnyOf(values=PROVINCES)])
     city = StringField(validators=[DataOptional(), Length(min=2)])
     district = StringField(validators=[DataOptional()])
+    advisor = Field(validators=[DataOptional(), Entity(AdvisorForm, Advisor)])
     notes = StringField(validators=[DataOptional()])
 
 
+# TODO remove
 # relative_firstname = StringField(validators=[DataOptional(), Length(min=2)])
 # relative_middlename = StringField(validators=[DataOptional()])
 # relative_surname = StringField(validators=[DataOptional(), Length(min=2)])

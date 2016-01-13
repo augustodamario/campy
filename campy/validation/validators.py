@@ -8,8 +8,9 @@ from wtforms.validators import ValidationError
 
 class DataOptional(Optional):
     def __call__(self, form, field):
-        if not field.data or isinstance(field.data[0], basestring) and not self.string_check(field.data[0]):
+        if not field.data or isinstance(field.data, basestring) and not self.string_check(field.data):
             field.errors[:] = []
+            field.data = None
             raise StopValidation()
 
 
@@ -67,3 +68,20 @@ class Telephone(object):
                     message = self.__message
             raise ValidationError(message)
         return match
+
+
+class Entity(object):
+    __MESSAGE = u"El campo no es válido"
+
+    def __init__(self, form, cls, message=None):
+        self.form = form
+        self.cls = cls
+        self.message = message or self.__MESSAGE
+
+    def __call__(self, form, field):
+        entity_form = self.form(data=field.data)
+        if not entity_form.validate():
+            raise ValidationError(self.message)
+        entity = self.cls()
+        entity_form.populate_obj(entity)
+        field.data = entity

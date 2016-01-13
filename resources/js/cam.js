@@ -74,6 +74,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
             url += "/" + $scope.$stateParams.id;
             $http.get(url).then(function(response) {$scope.patient = response.data;});
         }
+        $scope.advisors = [];
+        $http.get("api/users/advisors").then(function(response) {$scope.advisors = response.data;});
         $scope.processing = false;
         $scope.birthdatePicker = {
             isVisible: false,
@@ -110,7 +112,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         };
         $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {
             var patient = $scope.patient = response.data;
-            $scope.$parent.addPatientLink(patient.id, patient.firstname + " " + patient.surname);
+            var name = patient.surname? patient.firstname + " " + patient.surname: patient.firstname;
+            $scope.$parent.addPatientLink(patient.id, name);
         });
     }])
     .controller("PatientViewSummaryController", ["$scope", function($scope) {

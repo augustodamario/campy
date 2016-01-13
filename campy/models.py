@@ -8,6 +8,7 @@ from google.appengine.ext.ndb import DateTimeProperty
 from google.appengine.ext.ndb import IntegerProperty
 from google.appengine.ext.ndb import Model
 from google.appengine.ext.ndb import StringProperty
+from google.appengine.ext.ndb import StructuredProperty
 from google.appengine.ext.ndb import TextProperty
 
 
@@ -321,6 +322,12 @@ class User(BranchTopModel):
         super(User, self).__init__(**kwargs)
 
 
+class Advisor(Model):
+    """Used only as StructuredProperty for Patient."""
+    id = StringProperty(required=True)
+    name = StringProperty(required=True)
+
+
 class Patient(BranchTopModel):
     createdon = DateTimeProperty(required=True, auto_now_add=True)
     modifiedon = DateTimeProperty(required=True, auto_now=True)
@@ -338,6 +345,7 @@ class Patient(BranchTopModel):
     province = StringProperty(choices=PROVINCES)
     city = StringProperty()
     district = StringProperty()
+    advisor = StructuredProperty(Advisor)
     relative_firstname = StringProperty()
     relative_middlename = StringProperty()
     relative_surname = StringProperty()
