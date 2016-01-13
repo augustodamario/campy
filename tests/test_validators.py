@@ -1,4 +1,5 @@
 # coding: utf-8
+import config
 from campy.validation.validators import DateRange
 from campy.validation.validators import ValidationError
 from datetime import date
