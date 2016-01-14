@@ -48,6 +48,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
 
     .service("Session", function() {
         this.ROLE_ADVISOR = "advisor";
+        this.ROLE_SECRETARY = "secretary";
         this.ROLE_SYSTEM_ADMINISTRATOR = "system administrator";
         this.set = function(obj) {angular.extend(this, obj);}
         this.hasRole = function(role) {return !!this.roles && this.roles.indexOf(role) >= 0;}

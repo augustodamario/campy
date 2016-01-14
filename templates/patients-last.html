@@ -3,7 +3,9 @@
 {% block section_title %}Pacientes Recientes{% endblock %}
 
 {% block section_actions %}
-    <a class="btn btn-primary btn-sm" ui-sref="patient-new" role="button">Nuevo Paciente</a>
+    <a class="btn btn-primary btn-sm" role="button"
+            ng-show="Session.hasRole(Session.ROLE_SYSTEM_ADMINISTRATOR) || Session.hasRole(Session.ROLE_SECRETARY)"
+            ui-sref="patient-new">Nuevo Paciente</a>
 {% endblock %}
 
 {% block section_body %}
