@@ -82,8 +82,10 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
     .controller("PatientProfileController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         var url = "api/patient";
         $scope.patient = {};
+        $scope.isAdvisorEditable = true;
         if ($scope.$stateParams.id) {
             url += "/" + $scope.$stateParams.id;
+            $scope.isAdvisorEditable = false;
             $http.get(url).then(function(response) {$scope.patient = response.data;});
         }
 
@@ -91,7 +93,6 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $http.get("api/users/advisors").then(function(response) {$scope.advisors = response.data;});
 
         $scope.processing = false;
-        $scope.isAdvisorEditable = false;
         $scope.birthdatePicker = {
             isVisible: false,
             minDate: new Date(1900, 0, 1),
