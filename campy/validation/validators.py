@@ -85,3 +85,16 @@ class Entity(object):
         entity = self.cls()
         entity_form.populate_obj(entity)
         field.data = entity
+
+
+class Coadvisors(object):
+    def __call__(self, form, field):
+        if not field.data:
+            return
+        advisor = form.data["advisor"]
+        if not advisor:
+            raise ValidationError(u"Debe seleccionar una Orientadora")
+        ids = [a.id for a in field.data]
+        ids.append(advisor.id)
+        if len(ids) != len(set(ids)):
+            raise ValidationError(u"No debe repetir Co-orientadoras")

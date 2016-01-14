@@ -3,6 +3,7 @@ from campy.models import Advisor
 from campy.models import NATIONALITIES
 from campy.models import Patient
 from campy.models import PROVINCES
+from campy.validation.validators import Coadvisors
 from campy.validation.validators import DataAuto
 from campy.validation.validators import DataOptional
 from campy.validation.validators import DateRange
@@ -12,6 +13,7 @@ from datetime import date
 from datetime import datetime
 from wtforms.fields import DateField
 from wtforms.fields import Field
+from wtforms.fields import FieldList
 from wtforms.fields import IntegerField
 from wtforms.fields import StringField
 from wtforms.form import Form
@@ -71,6 +73,7 @@ class PatientForm(BaseForm):
     city = StringField(validators=[DataOptional(), Length(min=2)])
     district = StringField(validators=[DataOptional()])
     advisor = Field(validators=[DataOptional(), Entity(AdvisorForm, Advisor)])
+    coadvisors = FieldList(Field(validators=[DataOptional(), Entity(AdvisorForm, Advisor)]), validators=[Coadvisors()])
     notes = StringField(validators=[DataOptional()])
 
 

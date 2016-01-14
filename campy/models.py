@@ -348,6 +348,7 @@ class Patient(BaseModel):
     city = StringProperty()
     district = StringProperty()
     advisor = StructuredProperty(Advisor)
+    coadvisors = StructuredProperty(Advisor, repeated=True)
     relative_firstname = StringProperty()
     relative_middlename = StringProperty()
     relative_surname = StringProperty()

@@ -1,6 +1,6 @@
 {% extends "core/base.html" %}
 
-{% block section_title %}{{$stateParams.id? "Modificación de Paciente": "Nuevo Paciente"}}{% endblock %}
+{% block section_title %}{{ $stateParams.id? "Modificación de Paciente": "Nuevo Paciente" }}{% endblock %}
 
 {% block section_actions %}
     <a class="btn btn-default btn-sm" ng-click="!processing && cancel()" role="button">Cancelar</a>
@@ -119,8 +119,7 @@
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.advisor}">
                         <label class="control-label" for="advisor">ORIENTADORA</label>
                         <div class="input-group" ng-show="!isAdvisorEditable">
-                            <input id="advisor" class="form-control" type="text" disabled="disabled"
-                                    ng-model="patient.advisor.name" ng-show="!isAdvisorEditable"/>
+                            <input id="advisor" class="form-control" type="text" disabled ng-model="patient.advisor.name"/>
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" ng-click="editAdvisor()">
                                     <i class="glyphicon glyphicon-pencil"></i>
@@ -132,6 +131,28 @@
                             <option></option>
                         </select>
                         <alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{message}}</alert>
+                    </div>
+                    <div class="form-group col-sm-8" ng-class="{'has-error': errors.coadvisors}">
+                        <label class="control-label" for="coadvisors">CO-ORIENTADORAS</label>
+                        <div class="input-group" ng-show="!isCoadvisorsEditable">
+                            <input id="coadvisors" class="form-control" type="text" disabled="disabled"
+                                   value="{{ patient.coadvisors | joinByProp: 'name': ',  ' }}"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="button" ng-click="editCoadvisors()">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </button>
+                            </span>
+                        </div>
+                        <ui-select id="coadvisors" multiple focus-on="focusCoadvisors" ng-model="patient.coadvisors"
+                                ng-show="isCoadvisorsEditable">
+                            <ui-select-match>
+                                <span ng-bind="$item.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="advisor in (advisors | filter: $select.search) track by advisor.id">
+                                <span ng-bind="advisor.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                        <alert class="well-sm" ng-repeat="message in errors.coadvisors" type="danger">{{message}}</alert>
                     </div>
                 </div>
             </div>

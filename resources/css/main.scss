@@ -4,6 +4,12 @@
 }
 
 
+// Fix for ui-select
+.ui-select-multiple.ui-select-bootstrap {
+    padding: 6px 3px 0
+}
+
+
 // Variables
 $color-primary: #ffffff;
 $color-back-primary: #0ab4fd;

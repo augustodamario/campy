@@ -1,4 +1,4 @@
-angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
+angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.select"])
 
 
     .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
@@ -46,6 +46,13 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
     }])
 
 
+    .filter("joinByProp", function() {
+        return function(input, property, separator) {
+            return !!input? input.map(function(o){ return o[property]; }).join(separator): "";
+        };
+    })
+
+
     .service("Session", function() {
         this.ROLE_ADVISOR = "advisor";
         this.ROLE_SECRETARY = "secretary";
@@ -84,9 +91,11 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         var url = "api/patient";
         $scope.patient = {};
         $scope.isAdvisorEditable = true;
+        $scope.isCoadvisorsEditable = true;
         if ($scope.$stateParams.id) {
             url += "/" + $scope.$stateParams.id;
             $scope.isAdvisorEditable = false;
+            $scope.isCoadvisorsEditable = false;
             $http.get(url).then(function(response) {$scope.patient = response.data;});
         }
 
@@ -105,6 +114,12 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar"])
         $scope.editAdvisor = function() {
             $scope.patient.advisor = null;
             $scope.isAdvisorEditable = true;
+        }
+
+        $scope.editCoadvisors = function() {
+            $scope.patient.coadvisors = [];
+            $scope.isCoadvisorsEditable = true;
+            $scope.$broadcast("focusCoadvisors");
         }
 
         $scope.cancel = function() {
