@@ -1,4 +1,5 @@
 # coding: utf-8
+from campy.utils import age
 from datetime import date
 from datetime import datetime
 from google.appengine.ext.ndb import BooleanProperty
@@ -295,17 +296,23 @@ class _Roles(object):
 roles = _Roles
 
 
-class BaseModel(Model):
-    def id(self):
-        return self.key and self.key.id()
-
+class SerializableModel(Model):
     def json(self, include=None, exclude=None):
-        d = super(BaseModel, self).to_dict(include=include, exclude=exclude)
+        d = super(SerializableModel, self).to_dict(include=include, exclude=exclude)
         for k, v in d.iteritems():
             if isinstance(v, datetime):
                 d[k] = v.strftime("%Y-%m-%dT%H:%M:%SZ")
             elif isinstance(v, date):
                 d[k] = v.strftime("%Y-%m-%d")
+        return d
+
+
+class BaseModel(SerializableModel):
+    def id(self):
+        return self.key and self.key.id()
+
+    def json(self, include=None, exclude=None):
+        d = super(BaseModel, self).json(include=include, exclude=exclude)
         d["id"] = self.id()
         return d
 
@@ -324,10 +331,25 @@ class User(BaseModel):
         super(User, self).__init__(**kwargs)
 
 
-class Advisor(Model):
+class Advisor(SerializableModel):
     """Used only as StructuredProperty for Patient."""
     id = StringProperty(required=True)
     name = StringProperty(required=True)
+
+
+class Child(SerializableModel):
+    """Used only as StructuredProperty for Patient."""
+    modifiedon = DateTimeProperty(required=True)
+    name = StringProperty(required=True)
+    birthdate = DateProperty()
+    known_age = IntegerProperty()
+
+    def age(self):
+        if self.birthdate:
+            return age(self.birthdate)
+        if self.known_age is not None:
+            return age(self.modifiedon.date()) + self.known_age
+        return None
 
 
 class Patient(BaseModel):
@@ -360,14 +382,7 @@ class Patient(BaseModel):
     notes = TextProperty()
 
     def age(self):
-        if self.birthdate:
-            today = date.today()
-            years = today.year - self.birthdate.year - 1
-            if today.month > self.birthdate.month or\
-                    (today.month == self.birthdate.month and today.day >= self.birthdate.day):
-                years += 1
-            return max(0, years)
-        return None
+        return age(self.birthdate) if self.birthdate else None
 
     def has_advisor(self, user):
         return self.advisor and self.advisor.id == user.id()

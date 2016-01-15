@@ -1,5 +1,6 @@
 # coding: utf-8
 from campy.models import Advisor
+from campy.models import Child
 from campy.models import NATIONALITIES
 from campy.models import Patient
 from campy.models import PROVINCES
@@ -56,6 +57,13 @@ class AdvisorForm(BaseForm):
     name = StringField(validators=[DataRequired()])
 
 
+class ChildForm(BaseForm):
+    name = StringField(validators=[DataRequired(), Length(min=2)])
+    age = IntegerField(validators=[DataOptional(), NumberRange(min=0, max=99)])
+    birthdate = DateField(validators=[DataOptional(), DateRange(min=date(1900, 1, 1), max=date.today())],
+                          format="%Y-%m-%d")
+
+
 class PatientForm(BaseForm):
     record = IntegerField(validators=[DataAuto(Patient), NumberRange(min=1)])
     firstname = StringField(validators=[DataRequired(), Length(min=2)])
@@ -65,6 +73,7 @@ class PatientForm(BaseForm):
                           format="%Y-%m-%d")
     nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
     occupation = StringField(validators=[DataRequired(), Length(min=3)])
+    children = FieldList(Field(validators=[DataOptional(), Entity(ChildForm, Child)]))
     cellphone = StringField(validators=[DataOptional(), Telephone()])
     cellphone2 = StringField(validators=[DataOptional(), Telephone()])
     telephone = StringField(validators=[DataOptional(), Telephone()])

@@ -90,13 +90,19 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     .controller("PatientProfileController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         var url = "api/patient";
         $scope.patient = {};
+        $scope.child = {};
         $scope.isAdvisorEditable = true;
         $scope.isCoadvisorsEditable = true;
         if ($scope.$stateParams.id) {
             url += "/" + $scope.$stateParams.id;
             $scope.isAdvisorEditable = false;
             $scope.isCoadvisorsEditable = false;
-            $http.get(url).then(function(response) {$scope.patient = response.data;});
+            $http.get(url).then(function(response) {
+                var patient = response.data;
+                // Hack to use ui-select allowing duplicated values
+                angular.forEach(patient.children, function(value, key) {value.id = key;});
+                $scope.patient = patient;
+            });
         }
 
         $scope.advisors = [];
@@ -104,12 +110,35 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
 
         $scope.processing = false;
         $scope.birthdatePicker = {
-            isVisible: false,
+            visibility: {},
             minDate: new Date(1900, 0, 1),
             maxDate: new Date(),
             options: {startingDay: 1}
         };
         $scope.errors = {};
+
+        $scope.addChild = function() {
+            if (!$scope.child.name || ($scope.child.known_age && isNaN(parseInt($scope.child.known_age)))) {
+                return;
+            }
+
+            var child = angular.merge({}, $scope.child);
+            child.id = Math.random();
+            child.known_age = parseInt(child.known_age);
+            if (child.birthdate) {
+                // TODO calculate age
+                child.birthdate = $filter("date")(child.birthdate, "yyyy-MM-dd");
+            } else {
+                child.age = child.known_age;
+            }
+
+            if (!$scope.patient.children) {
+                $scope.patient.children = [child]
+            } else {
+                $scope.patient.children.push(child);
+            }
+            $scope.child = {};
+        }
 
         $scope.editAdvisor = function() {
             $scope.patient.advisor = null;
