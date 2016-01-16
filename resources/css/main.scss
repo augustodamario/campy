@@ -4,9 +4,14 @@
 }
 
 
-// Fix for ui-select
+// Fixes
+// ui-select
 .ui-select-multiple.ui-select-bootstrap {
-    padding: 6px 3px 0
+    padding: 6px 3px 0;
+}
+// UI Bootstrap Popover appended to Bootstrap Input group
+.input-group .popover-content .form-group input.form-control {
+    border-radius: 4px;
 }
 
 

@@ -10,18 +10,20 @@
 {% block section_body %}
     <script type="text/ng-template" id="child-template.html">
         <div class="child-popup">
-            <div class="form-group">
-              <label>NOMBRE *</label>
-              <input class="form-control" type="text" ng-model="child.name"/>
+            <div class="form-group" ng-class="{'has-error': child.errors.name}">
+                <label class="control-label" for="child_name">NOMBRE *</label>
+                <input id="child_name" class="form-control" type="text" ng-model="child.name"/>
+                <uib-alert class="well-sm" ng-show="child.errors.name" type="danger">{{ child.errors.name }}</uib-alert>
             </div>
-            <div class="form-group">
-              <label>EDAD</label>
-              <input class="form-control" type="number" min="0" max="99" ng-model="child.known_age"/>
+            <div class="form-group" ng-class="{'has-error': child.errors.known_age}">
+                <label class="control-label" for="child_known_age">EDAD</label>
+                <input id="child_known_age" class="form-control" type="number" min="0" max="99" ng-model="child.known_age"/>
+                <uib-alert class="well-sm" ng-show="child.errors.known_age" type="danger">{{ child.errors.known_age }}</uib-alert>
             </div>
-            <div class="form-group">
-                <label>FECHA DE NACIMIENTO</label>
+            <div class="form-group" ng-class="{'has-error': child.errors.birthdate}">
+                <label class="control-label" for="child_birthdate">FECHA DE NACIMIENTO</label>
                 <div class="input-group">
-                    <input class="form-control" type="text" ng-model="child.birthdate"
+                    <input id="child_birthdate" class="form-control" type="text" ng-model="child.birthdate"
                             uib-datepicker-popup="dd/MM/yyyy" datepicker-options="birthdatePicker.options"
                             is-open="birthdatePicker.visibility.child" min-date="birthdatePicker.minDate" max-date="birthdatePicker.maxDate"
                             show-weeks="false" current-text="Hoy" clear-text="Borrar" close-text="Cerrar"/>
@@ -31,6 +33,7 @@
                         </button>
                   </span>
                 </div>
+                <uib-alert class="well-sm" ng-show="child.errors.birthdate" type="danger">{{ child.errors.birthdate }}</uib-alert>
             </div>
             <div class="form-group text-center">
                 <button class="btn btn-primary btn-sm" ng-click="!processing && addChild()" role="button">Agregar</button>
@@ -44,25 +47,25 @@
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.record}">
                         <label class="control-label" for="record">Nº DE FICHA</label>
-                        <input id="record" class="form-control" type="text" ng-model="patient.record" placeholder="Automático"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.record" type="danger">{{message}}</uib-alert>
+                        <input id="record" class="form-control" type="number" ng-model="patient.record" min="1" placeholder="Automático"/>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.record" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.firstname}">
                         <label class="control-label" for="firstname">NOMBRE *</label>
                         <input id="firstname" class="form-control" type="text" ng-model="patient.firstname" placeholder="Primer nombre"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.firstname" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.firstname" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.middlename}">
                         <label class="control-label" for="middlename">&nbsp;</label>
                         <input id="middlename" class="form-control" type="text" ng-model="patient.middlename" placeholder="Segundo nombre (Opcional)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.middlename" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.middlename" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.surname}">
                         <label class="control-label" for="surname">&nbsp;</label>
                         <input id="surname" class="form-control" type="text" ng-model="patient.surname" placeholder="Apellido (Opcional)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <div class="row">
@@ -79,7 +82,7 @@
                                 </button>
                           </span>
                         </div>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.birthdate" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.birthdate" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.nationality}">
                         <label class="control-label" for="nationality">NACIONALIDAD *</label>
@@ -88,12 +91,12 @@
                                 <option>{= nationality =}</option>
                             {% endfor %}
                         </select>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.occupation}">
                         <label class="control-label" for="occupation">OCUPACIÓN *</label>
                         <input id="occupation" class="form-control" type="text" ng-model="patient.occupation"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.occupation" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.occupation" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <h4><span class="heading">Hijos</span></h4>
@@ -115,7 +118,7 @@
                                 </button>
                             </span>
                         </div>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.children" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.children" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <h4><span class="heading">Información de contacto</span></h4>
@@ -123,24 +126,24 @@
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone}">
                         <label class="control-label" for="cellphone">CELULAR 1 (Turno)</label>
                         <input id="cellphone" class="form-control" type="text" ng-model="patient.cellphone" placeholder="ej: 11 5467 2345 (sin 15)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.cellphone" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.cellphone" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.cellphone2}">
                         <label class="control-label" for="cellphone2">CELULAR 2</label>
                         <input id="cellphone2" class="form-control" type="text" ng-model="patient.cellphone2" placeholder="ej: 11 5467 2345 (sin 15)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.cellphone2" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.cellphone2" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.telephone}">
                         <label class="control-label" for="telephone">TEL. FIJO</label>
                         <input id="telephone" class="form-control" type="text" ng-model="patient.telephone" placeholder="ej: 11 4565 6756"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.telephone" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.telephone" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.email}">
                         <label class="control-label" for="email">EMAIL</label>
                         <input id="email" class="form-control" type="text" ng-model="patient.email"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.email" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.email" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <div class="row">
@@ -152,17 +155,17 @@
                                 <option>{= province =}</option>
                             {% endfor %}
                         </select>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.province" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.province" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.city}">
                         <label class="control-label" for="city">&nbsp;</label>
                         <input id="city" class="form-control" type="text" ng-model="patient.city" placeholder="Ciudad"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.city" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.city" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.district}">
                         <label class="control-label" for="district">&nbsp;</label>
                         <input id="district" class="form-control" type="text" ng-model="patient.district" placeholder="Barrio"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.district" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.district" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
                 <h4><span class="heading">Orientación</span></h4>
@@ -181,7 +184,7 @@
                                 ng-options="advisor as advisor.name for advisor in advisors track by advisor.id">
                             <option></option>
                         </select>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-8" ng-class="{'has-error': errors.coadvisors}">
                         <label class="control-label" for="coadvisors">CO-ORIENTADORAS</label>
@@ -203,7 +206,7 @@
                                 <span ng-bind="advisor.name"></span>
                             </ui-select-choices>
                         </ui-select>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.coadvisors" type="danger">{{message}}</uib-alert>
+                        <uib-alert class="well-sm" ng-repeat="message in errors.coadvisors" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
             </div>
@@ -211,7 +214,7 @@
                 <h4><span class="heading">Notas</span></h4>
                 <div class="form-group" ng-class="{'has-error': errors.notes}">
                     <textarea id="notes" class="form-control" rows="20" ng-model="patient.notes"></textarea>
-                    <uib-alert class="well-sm" ng-repeat="message in errors.notes" type="danger">{{message}}</uib-alert>
+                    <uib-alert class="well-sm" ng-repeat="message in errors.notes" type="danger">{{ message }}</uib-alert>
                 </div>
             </div>
         </fieldset>

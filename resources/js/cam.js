@@ -90,7 +90,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     .controller("PatientProfileController", ["$scope", "$http", "$filter", function($scope, $http, $filter) {
         var url = "api/patient";
         $scope.patient = {};
-        $scope.child = {};
+        $scope.child = {errors: {}};
         $scope.isAdvisorEditable = true;
         $scope.isCoadvisorsEditable = true;
         if ($scope.$stateParams.id) {
@@ -118,7 +118,12 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         $scope.errors = {};
 
         $scope.addChild = function() {
-            if (!$scope.child.name || ($scope.child.known_age && isNaN(parseInt($scope.child.known_age)))) {
+            if (!$scope.child.name) {
+                $scope.child.errors.name = "Este campo es obligatorio.";
+                return;
+            }
+            if ($scope.child.known_age != null && !(parseInt($scope.child.known_age) >= 0)) {
+                $scope.child.errors.known_age = "El campo debe ser mayor o igual a 0.";
                 return;
             }
 
@@ -137,7 +142,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             } else {
                 $scope.patient.children.push(child);
             }
-            $scope.child = {};
+            $scope.child = {errors: {}};
         }
 
         $scope.editAdvisor = function() {
