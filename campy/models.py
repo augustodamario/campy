@@ -297,6 +297,10 @@ roles = _Roles
 
 
 class SerializableModel(Model):
+    @staticmethod
+    def _should_serialize(key, include, exclude):
+        return not ((exclude and key in exclude) or (include and key not in include))
+
     def json(self, include=None, exclude=None):
         d = super(SerializableModel, self).to_dict(include=include, exclude=exclude)
         for k, v in d.iteritems():
@@ -312,8 +316,9 @@ class BaseModel(SerializableModel):
         return self.key and self.key.id()
 
     def json(self, include=None, exclude=None):
-        d = super(BaseModel, self).json(include=include, exclude=exclude)
-        d["id"] = self.id()
+        d = super(BaseModel, self).json(include, exclude)
+        if self._should_serialize("id", include, exclude):
+            d["id"] = self.id()
         return d
 
 
@@ -348,8 +353,14 @@ class Child(SerializableModel):
         if self.birthdate:
             return age(self.birthdate)
         if self.known_age is not None:
-            return age(self.modifiedon.date()) + self.known_age
+            return age(self.modifiedon) + self.known_age
         return None
+
+    def json(self, include=None, exclude=None):
+        d = super(Child, self).json(include, exclude)
+        if self._should_serialize("age", include, exclude):
+            d["age"] = self.age()
+        return d
 
 
 class Patient(BaseModel):
@@ -362,6 +373,7 @@ class Patient(BaseModel):
     birthdate = DateProperty(required=True)
     nationality = StringProperty(required=True, choices=NATIONALITIES)
     occupation = StringProperty(required=True)
+    children = StructuredProperty(Child, repeated=True)
     cellphone = StringProperty()
     cellphone2 = StringProperty()
     telephone = StringProperty()
@@ -388,8 +400,15 @@ class Patient(BaseModel):
         return self.advisor and self.advisor.id == user.id()
 
     def json(self, include=None, exclude=None):
-        d = super(Patient, self).json(include=include, exclude=exclude)
-        d["age"] = self.age()
+        d = super(Patient, self).json(include, ["children", "advisor", "coadvisors"] + (exclude or []))
+        if self._should_serialize("children", include, exclude):
+            d["children"] = [c.json(include, exclude) for c in self.children] if self.children else []
+        if self._should_serialize("advisor", include, exclude):
+            d["advisor"] = self.advisor.json(include, exclude) if self.advisor else None
+        if self._should_serialize("coadvisors", include, exclude):
+            d["coadvisors"] = [c.json(include, exclude) for c in self.coadvisors] if self.coadvisors else []
+        if self._should_serialize("age", include, exclude):
+            d["age"] = self.age()
         return d
 
 

@@ -13,6 +13,7 @@ from campy.validation.validators import Telephone
 from datetime import date
 from datetime import datetime
 from wtforms.fields import DateField
+from wtforms.fields import DateTimeField
 from wtforms.fields import Field
 from wtforms.fields import FieldList
 from wtforms.fields import IntegerField
@@ -25,10 +26,21 @@ from wtforms.validators import Length
 from wtforms.validators import NumberRange
 
 
+# Hack WTForms: parse datetime given as dict value
+def _datetimefield_process_data(self, value):
+    self.data = None
+    if value and not isinstance(value, datetime):
+        try:
+            self.data = datetime.strptime(value, self.format)
+        except ValueError:
+            raise ValueError(self.gettext("Not a valid datetime value"))
+DateTimeField.process_data = _datetimefield_process_data
+
+
 # Hack WTForms: parse date given as dict value
 def _datefield_process_data(self, value):
     self.data = None
-    if value:
+    if value and not isinstance(value, date):
         try:
             self.data = datetime.strptime(value, self.format).date()
         except ValueError:
@@ -58,9 +70,14 @@ class AdvisorForm(BaseForm):
 
 
 class ChildForm(BaseForm):
-    name = StringField(validators=[DataRequired(), Length(min=2)])
-    age = IntegerField(validators=[DataOptional(), NumberRange(min=0, max=99)])
-    birthdate = DateField(validators=[DataOptional(), DateRange(min=date(1900, 1, 1), max=date.today())],
+    modifiedon = DateTimeField(validators=[
+                                   DataOptional(default=datetime.now),
+                                   DateRange(min=datetime(1900, 1, 1), max=datetime.now)
+                               ],
+                               format="%Y-%m-%dT%H:%M:%SZ")
+    name = StringField(validators=[DataRequired()])
+    known_age = IntegerField(validators=[DataOptional(), NumberRange(min=0, max=99)])
+    birthdate = DateField(validators=[DataOptional(), DateRange(min=date(1900, 1, 1), max=date.today)],
                           format="%Y-%m-%d")
 
 
@@ -69,7 +86,7 @@ class PatientForm(BaseForm):
     firstname = StringField(validators=[DataRequired(), Length(min=2)])
     middlename = StringField(validators=[DataOptional()])
     surname = StringField(validators=[DataOptional(), Length(min=2)])
-    birthdate = DateField(validators=[DataRequired(), DateRange(min=date(1900, 1, 1), max=date.today())],
+    birthdate = DateField(validators=[DataRequired(), DateRange(min=date(1900, 1, 1), max=date.today)],
                           format="%Y-%m-%d")
     nationality = StringField(validators=[DataRequired(), AnyOf(values=NATIONALITIES)])
     occupation = StringField(validators=[DataRequired(), Length(min=3)])
