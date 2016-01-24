@@ -7,10 +7,14 @@ from wtforms.validators import ValidationError
 
 
 class DataOptional(Optional):
+    def __init__(self, default=None, **kwargs):
+        super(DataOptional, self).__init__(**kwargs)
+        self.default = default
+
     def __call__(self, form, field):
         if not field.data or isinstance(field.data, basestring) and not self.string_check(field.data):
             field.errors[:] = []
-            field.data = None
+            field.data = self.default() if callable(self.default) else self.default
             raise StopValidation()
 
 
@@ -38,15 +42,16 @@ class DateRange(object):
 
     def __call__(self, form, field):
         data = field.data
-        if data is not None and\
-                ((self.min is not None and data < self.min) or (self.max is not None and data > self.max)):
-            if self.min is None:
-                message = u"La fecha debe ser igual o anterior al %s." % self.max.strftime(self.__DATE_FORMAT)
-            elif self.max is None:
-                message = u"La fecha debe ser igual o posterior al %s." % self.min.strftime(self.__DATE_FORMAT)
+        dmin = self.min() if callable(self.min) else self.min
+        dmax = self.max() if callable(self.max) else self.max
+        if data is not None and ((dmin is not None and data < dmin) or (dmax is not None and data > dmax)):
+            if dmin is None:
+                message = u"La fecha debe ser igual o anterior al %s." % dmax.strftime(self.__DATE_FORMAT)
+            elif dmax is None:
+                message = u"La fecha debe ser igual o posterior al %s." % dmin.strftime(self.__DATE_FORMAT)
             else:
                 message = u"La fecha debe estar entre el %s y el %s." %\
-                          (self.min.strftime(self.__DATE_FORMAT), self.max.strftime(self.__DATE_FORMAT))
+                          (dmin.strftime(self.__DATE_FORMAT), dmax.strftime(self.__DATE_FORMAT))
             raise ValidationError(message)
 
 

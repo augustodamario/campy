@@ -106,7 +106,7 @@
                             <ui-select id="children" multiple ng-model="patient.children" search-enabled="false">
                                 <ui-select-match>
                                     <span ng-bind="$item.name"></span>
-                                    <span ng-show="$item.age >= 0">({{ $item.age }} años){{ $item.birthdate? "": "?" }}</span>
+                                    <span ng-show="$item.age != null && $item.age >= 0">({{ $item.age }} años){{ $item.birthdate? "": "?" }}</span>
                                 </ui-select-match>
                                 <ui-select-choices repeat="ch in (patient.UNDEFINED | filter: $select.search) track by ch.id">
                                     <span ng-bind="ch.name"></span>

@@ -53,6 +53,18 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     })
 
 
+    .filter("age", function() {
+        return function (birthdate) {
+            var now = new Date();
+            var years = now.getFullYear() - birthdate.getFullYear() - 1;
+            if (now.getMonth() > birthdate.getMonth() || (now.getMonth() == birthdate.getMonth() && now.getDate() >= birthdate.getDate())) {
+                years += 1;
+            }
+            return Math.max(0, years);
+        };
+    })
+
+
     .service("Session", function() {
         this.ROLE_ADVISOR = "advisor";
         this.ROLE_SECRETARY = "secretary";
@@ -131,7 +143,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             child.id = Math.random();
             child.known_age = parseInt(child.known_age);
             if (child.birthdate) {
-                // TODO calculate age
+                child.age = $filter("age")(child.birthdate);
                 child.birthdate = $filter("date")(child.birthdate, "yyyy-MM-dd");
             } else {
                 child.age = child.known_age;
