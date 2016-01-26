@@ -9,10 +9,10 @@
 {% endblock %}
 
 {% block section_tabs %}
-    <tabset>
-        <tab heading="Resumen" active="tab.summary" select="$state.go('patient-view.summary')"></tab>
-        <tab heading="Cronología" active="tab.chronology" select="$state.go('patient-view.chronology')"></tab>
-    </tabset>
+    <uib-tabset>
+        <uib-tab heading="Resumen" active="tab.summary" select="$state.go('patient-view.summary')"></uib-tab>
+        <uib-tab heading="Cronología" active="tab.chronology" select="$state.go('patient-view.chronology')"></uib-tab>
+    </uib-tabset>
 {% endblock %}
 
 {% block bottom %}

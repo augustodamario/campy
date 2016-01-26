@@ -397,7 +397,9 @@ class Patient(BaseModel):
         return age(self.birthdate) if self.birthdate else None
 
     def has_advisor(self, user):
-        return self.advisor and self.advisor.id == user.id()
+        uid = user.id()
+        return (self.advisor and self.advisor.id == uid) or\
+               (self.coadvisors and uid in map(lambda a: a.id, self.coadvisors))
 
     def json(self, include=None, exclude=None):
         d = super(Patient, self).json(include, ["children", "advisor", "coadvisors"] + (exclude or []))
