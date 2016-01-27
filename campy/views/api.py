@@ -101,5 +101,5 @@ def api_patients_last(request):
         advisor = request.user
     else:
         return []
-    attributes = ["id", "modifiedon", "record", "firstname", "surname", "birthdate", "age", "cellphone", "email"]
+    attributes = ["id", "modifiedon", "record", "firstname", "surname", "cellphone", "email"]
     return [p.json(include=attributes) for p in list_last_patients(request.branch, advisor)]

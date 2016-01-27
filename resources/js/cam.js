@@ -9,7 +9,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     }])
 
 
-    .config(["$urlRouterProvider", "$stateProvider", function($urlRouterProvider, $stateProvider) {
+    .config(["$urlRouterProvider", "$stateProvider", "$httpProvider", function($urlRouterProvider, $stateProvider, $httpProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
         $stateProvider
             .state("patients-last", {
@@ -43,6 +43,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
                 templateUrl: "templates/patient-profile.html",
                 controller: "PatientProfileController"
             });
+        $httpProvider.interceptors.push("authorizationInterceptorService");
     }])
 
 
@@ -63,6 +64,18 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             return Math.max(0, years);
         };
     })
+
+
+    .factory("authorizationInterceptorService", ["$q", "$rootScope", function($q, $rootScope) {
+        return {
+            responseError: function(rejection) {
+                if (rejection.status === 403) {
+                    $rootScope.$state.go("patients-last");
+                }
+                return $q.reject(rejection);
+            }
+        };
+    }])
 
 
     .service("Session", function() {

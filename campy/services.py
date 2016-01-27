@@ -2,6 +2,7 @@
 from campy.models import Patient
 from campy.models import User
 from google.appengine.ext.ndb import Key
+from google.appengine.ext.ndb import OR
 
 
 def get_user(branch, uid):
@@ -22,5 +23,6 @@ def list_last_patients(branch, advisor=None):
     if advisor is None:
         query = Patient.query(ancestor=branch.key)
     else:
-        query = Patient.query(Patient.advisor.id == advisor.id(), ancestor=branch.key)
+        query = Patient.query(OR(Patient.advisor.id == advisor.id(), Patient.coadvisors.id == advisor.id()),
+                              ancestor=branch.key)
     return query.order(-Patient.modifiedon).fetch()
