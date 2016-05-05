@@ -66,6 +66,20 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     })
 
 
+    .filter("asDate", function() {
+        return function(datestring) {
+            if (!datestring) {
+                return null;
+            } else if (datestring.endsWith("Z")) {
+                return new Date(datestring);
+            } else {
+                var ymd = datestring.split("-");
+                return new Date(parseInt(ymd[0]), parseInt(ymd[1]) - 1, parseInt(ymd[2]));
+            }
+        };
+    })
+
+
     .factory("authorizationInterceptorService", ["$q", "$rootScope", function($q, $rootScope) {
         return {
             responseError: function(rejection) {
@@ -124,6 +138,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             $scope.isCoadvisorsEditable = false;
             $http.get(url).then(function(response) {
                 var patient = response.data;
+                // UI Bootstrap Datepicker requires a Date as model
+                patient.birthdate = $filter("asDate")(patient.birthdate);
                 // Hack to use ui-select allowing duplicated values
                 angular.forEach(patient.children, function(value, key) {value.id = key;});
                 $scope.patient = patient;
@@ -136,9 +152,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         $scope.processing = false;
         $scope.birthdatePicker = {
             visibility: {},
-            minDate: new Date(1900, 0, 1),
-            maxDate: new Date(),
-            options: {startingDay: 1}
+            options: {startingDay: 1, showWeeks: false, minDate: new Date(1900, 0, 1), maxDate: new Date()}
         };
         $scope.errors = {};
 
