@@ -1,14 +1,6 @@
 angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.select"])
 
 
-    .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-        $rootScope.Session = Session;
-        $http.get("api/user").then(function(response) {Session.set(response.data);});
-    }])
-
-
     .config(["$urlRouterProvider", "$stateProvider", "$httpProvider", function($urlRouterProvider, $stateProvider, $httpProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
         $stateProvider
@@ -38,12 +30,25 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
               templateUrl: "templates/patient-view.chronology.html",
               controller: "PatientViewChronologyController"
             })
+            .state('patient-view.interview-new', {
+              url: "/entrevista/nueva/{interviewId:int}",
+              templateUrl: "templates/patient-view.interview.html",
+              controller: "PatientViewInterviewController"
+            })
             .state("patient-edit", {
                 url: "/paciente/{id:int}/modificar",
                 templateUrl: "templates/patient-profile.html",
                 controller: "PatientProfileController"
             });
         $httpProvider.interceptors.push("authorizationInterceptorService");
+    }])
+
+
+    .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+        $rootScope.Session = Session;
+        $http.get("api/user").then(function(response) {Session.set(response.data);});
     }])
 
 
@@ -96,7 +101,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         this.ROLE_ADVISOR = "advisor";
         this.ROLE_SECRETARY = "secretary";
         this.ROLE_SYSTEM_ADMINISTRATOR = "system administrator";
-        this.set = function(obj) {angular.extend(this, obj);}
+        this.set = function(obj) {angular.extend(this, obj);};
         this.hasRole = function(role) {return !!this.roles && this.roles.indexOf(role) >= 0;}
     })
 
@@ -107,16 +112,16 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             if (!$scope.patientLinks.some(function(p) {return p.id === id;})) {
                 $scope.patientLinks.push({id: id, name: name});
             }
-        }
+        };
         $scope.removePatientLink = function(num) {
             var removed = $scope.patientLinks.splice(num, 1)[0];
             if ($scope.isPatientLinkActive(removed.id)) {
                 $scope.$state.go("patients-last");
             }
-        }
+        };
         $scope.isPatientLinkActive = function(id) {
             return $scope.$state.includes("patient-view", {id: id});
-        }
+        };
     }])
 
 
@@ -177,18 +182,18 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
                 $scope.patient.children.push(child);
             }
             $scope.child = {};
-        }
+        };
 
         $scope.editAdvisor = function() {
             $scope.patient.advisor = null;
             $scope.isAdvisorEditable = true;
-        }
+        };
 
         $scope.editCoadvisors = function() {
             $scope.patient.coadvisors = [];
             $scope.isCoadvisorsEditable = true;
             $scope.$broadcast("focusCoadvisors");
-        }
+        };
 
         $scope.cancel = function() {
             if ($scope.$stateParams.id) {
@@ -196,7 +201,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             } else {
                 $scope.$state.go("patients-last");
             }
-        }
+        };
 
         $scope.save = function() {
             $scope.processing = true;
@@ -210,15 +215,21 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
                 $scope.errors = response.data;
                 $scope.processing = false;
             });
-        }
+        };
     }])
 
 
-    .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
-        $scope.tabs = {
-            summary: $scope.$state.is("patient-view.summary"),
-            chronology: $scope.$state.is("patient-view.chronology")
+    .controller("PatientViewController", ["$scope", "$timeout", "$http", function($scope, $timeout, $http) {
+        $scope.setActiveTab = function(index) {
+            $timeout(function() { $scope.activeTab = index; });
         };
+
+        $scope.interviews = [];
+        $scope.newInterview = function() {
+            $scope.interviews.push({});
+            $scope.setActiveTab($scope.interviews.length);
+        };
+
         $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {
             var patient = $scope.patient = response.data;
             var name = patient.surname? patient.firstname + " " + patient.surname: patient.firstname;
@@ -228,8 +239,21 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
 
 
     .controller("PatientViewSummaryController", ["$scope", function($scope) {
+        $scope.setActiveTab(-1);
     }])
 
 
     .controller("PatientViewChronologyController", ["$scope", function($scope) {
+        $scope.setActiveTab(-2);
+    }])
+
+
+    .controller("PatientViewInterviewController", ["$scope", function($scope) {
+        var interviewId = $scope.$stateParams.interviewId;
+        if (interviewId < 1 || interviewId > $scope.interviews.length) {
+            $scope.$state.go("^.summary");
+            return;
+        }
+
+        $scope.setActiveTab(interviewId);
     }]);
