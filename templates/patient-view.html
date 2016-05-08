@@ -9,9 +9,11 @@
 {% endblock %}
 
 {% block section_tabs %}
-    <uib-tabset>
-        <uib-tab heading="Resumen" active="tab.summary" select="$state.go('patient-view.summary')"></uib-tab>
-        <uib-tab heading="Cronología" active="tab.chronology" select="$state.go('patient-view.chronology')"></uib-tab>
+    <uib-tabset active="activeTab">
+        <uib-tab heading="Resumen" index="-1" select="$state.go('^.summary')"></uib-tab>
+        <uib-tab heading="Cronología" index="-2" select="$state.go('^.chronology')"></uib-tab>
+        <uib-tab heading="Nueva Entrevista" index="$index + 1" select="$state.go('^.interview-new', {interviewId: $index + 1})"
+                ng-repeat="interview in interviews"></uib-tab>
     </uib-tabset>
 {% endblock %}
 

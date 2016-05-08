@@ -115,3 +115,8 @@ textarea {
 .child-popup {
     width: 150px;
 }
+
+.nav > li > a {
+    padding: 2px 5px;
+    background-color: $color-back-secondary;
+}

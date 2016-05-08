@@ -1,14 +1,6 @@
 angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.select"])
 
 
-    .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
-        $rootScope.$state = $state;
-        $rootScope.$stateParams = $stateParams;
-        $rootScope.Session = Session;
-        $http.get("api/user").then(function(response) {Session.set(response.data);});
-    }])
-
-
     .config(["$urlRouterProvider", "$stateProvider", "$httpProvider", function($urlRouterProvider, $stateProvider, $httpProvider) {
         $urlRouterProvider.otherwise("/pacientes/ultimos");
         $stateProvider
@@ -38,12 +30,25 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
               templateUrl: "templates/patient-view.chronology.html",
               controller: "PatientViewChronologyController"
             })
+            .state('patient-view.interview-new', {
+              url: "/entrevista/nueva/{interviewId:int}",
+              templateUrl: "templates/patient-view.interview.html",
+              controller: "PatientViewInterviewController"
+            })
             .state("patient-edit", {
                 url: "/paciente/{id:int}/modificar",
                 templateUrl: "templates/patient-profile.html",
                 controller: "PatientProfileController"
             });
         $httpProvider.interceptors.push("authorizationInterceptorService");
+    }])
+
+
+    .run(["$rootScope", "$state", "$stateParams", "$http", "Session", function($rootScope, $state, $stateParams, $http, Session) {
+        $rootScope.$state = $state;
+        $rootScope.$stateParams = $stateParams;
+        $rootScope.Session = Session;
+        $http.get("api/user").then(function(response) {Session.set(response.data);});
     }])
 
 
@@ -66,6 +71,20 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     })
 
 
+    .filter("asDate", function() {
+        return function(datestring) {
+            if (!datestring) {
+                return null;
+            } else if (datestring.endsWith("Z")) {
+                return new Date(datestring);
+            } else {
+                var ymd = datestring.split("-");
+                return new Date(parseInt(ymd[0]), parseInt(ymd[1]) - 1, parseInt(ymd[2]));
+            }
+        };
+    })
+
+
     .factory("authorizationInterceptorService", ["$q", "$rootScope", function($q, $rootScope) {
         return {
             responseError: function(rejection) {
@@ -82,7 +101,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         this.ROLE_ADVISOR = "advisor";
         this.ROLE_SECRETARY = "secretary";
         this.ROLE_SYSTEM_ADMINISTRATOR = "system administrator";
-        this.set = function(obj) {angular.extend(this, obj);}
+        this.set = function(obj) {angular.extend(this, obj);};
         this.hasRole = function(role) {return !!this.roles && this.roles.indexOf(role) >= 0;}
     })
 
@@ -93,16 +112,16 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             if (!$scope.patientLinks.some(function(p) {return p.id === id;})) {
                 $scope.patientLinks.push({id: id, name: name});
             }
-        }
+        };
         $scope.removePatientLink = function(num) {
             var removed = $scope.patientLinks.splice(num, 1)[0];
             if ($scope.isPatientLinkActive(removed.id)) {
                 $scope.$state.go("patients-last");
             }
-        }
+        };
         $scope.isPatientLinkActive = function(id) {
             return $scope.$state.includes("patient-view", {id: id});
-        }
+        };
     }])
 
 
@@ -124,6 +143,8 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             $scope.isCoadvisorsEditable = false;
             $http.get(url).then(function(response) {
                 var patient = response.data;
+                // UI Bootstrap Datepicker requires a Date as model
+                patient.birthdate = $filter("asDate")(patient.birthdate);
                 // Hack to use ui-select allowing duplicated values
                 angular.forEach(patient.children, function(value, key) {value.id = key;});
                 $scope.patient = patient;
@@ -136,19 +157,22 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         $scope.processing = false;
         $scope.birthdatePicker = {
             visibility: {},
-            minDate: new Date(1900, 0, 1),
-            maxDate: new Date(),
-            options: {startingDay: 1}
+            options: {startingDay: 1, showWeeks: false, minDate: new Date(1900, 0, 1), maxDate: new Date()}
         };
         $scope.errors = {};
 
         $scope.addChild = function() {
+            $scope.child.errors = {};
             if (!$scope.child.name) {
                 $scope.child.errors.name = "Este campo es obligatorio.";
-                return;
             }
-            if ($scope.child.known_age != null && !(parseInt($scope.child.known_age) >= 0)) {
-                $scope.child.errors.known_age = "El campo debe ser mayor o igual a 0.";
+            if ($scope.child.known_age != null) {
+                var known_age = parseInt($scope.child.known_age);
+                if (known_age < 0 || known_age > 99) {
+                    $scope.child.errors.known_age = "El campo debe valer entre 0 y 99.";
+                }
+            }
+            if ($scope.child.errors.name || $scope.child.errors.known_age) {
                 return;
             }
 
@@ -168,18 +192,18 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
                 $scope.patient.children.push(child);
             }
             $scope.child = {errors: {}};
-        }
+        };
 
         $scope.editAdvisor = function() {
             $scope.patient.advisor = null;
             $scope.isAdvisorEditable = true;
-        }
+        };
 
         $scope.editCoadvisors = function() {
             $scope.patient.coadvisors = [];
             $scope.isCoadvisorsEditable = true;
             $scope.$broadcast("focusCoadvisors");
-        }
+        };
 
         $scope.cancel = function() {
             if ($scope.$stateParams.id) {
@@ -187,7 +211,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
             } else {
                 $scope.$state.go("patients-last");
             }
-        }
+        };
 
         $scope.save = function() {
             $scope.processing = true;
@@ -201,15 +225,21 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
                 $scope.errors = response.data;
                 $scope.processing = false;
             });
-        }
+        };
     }])
 
 
-    .controller("PatientViewController", ["$scope", "$http", function($scope, $http) {
-        $scope.tabs = {
-            summary: $scope.$state.is("patient-view.summary"),
-            chronology: $scope.$state.is("patient-view.chronology")
+    .controller("PatientViewController", ["$scope", "$timeout", "$http", function($scope, $timeout, $http) {
+        $scope.setActiveTab = function(index) {
+            $timeout(function() { $scope.activeTab = index; });
         };
+
+        $scope.interviews = [];
+        $scope.newInterview = function() {
+            $scope.interviews.push({});
+            $scope.setActiveTab($scope.interviews.length);
+        };
+
         $http.get("api/patient/" + $scope.$stateParams.id).then(function(response) {
             var patient = $scope.patient = response.data;
             var name = patient.surname? patient.firstname + " " + patient.surname: patient.firstname;
@@ -219,8 +249,21 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
 
 
     .controller("PatientViewSummaryController", ["$scope", function($scope) {
+        $scope.setActiveTab(-1);
     }])
 
 
     .controller("PatientViewChronologyController", ["$scope", function($scope) {
+        $scope.setActiveTab(-2);
+    }])
+
+
+    .controller("PatientViewInterviewController", ["$scope", function($scope) {
+        var interviewId = $scope.$stateParams.interviewId;
+        if (interviewId < 1 || interviewId > $scope.interviews.length) {
+            $scope.$state.go("^.summary");
+            return;
+        }
+
+        $scope.setActiveTab(interviewId);
     }]);
