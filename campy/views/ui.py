@@ -1,5 +1,6 @@
 # coding: utf-8
 from campy.models import NATIONALITIES
+from campy.models import Observation
 from campy.models import PROVINCES
 from campy.security import require_any_role
 from campy.security import require_login
@@ -31,6 +32,7 @@ def home(request):
 def templates(request):
     context = {
         "nationalities": NATIONALITIES,
-        "provinces": PROVINCES
+        "provinces": PROVINCES,
+        "observations": Observation.OBSERVATION_TYPES
     }
     return Response(render(request.matchdict["name"] + ".html", context, request=request))
