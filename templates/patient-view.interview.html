@@ -7,57 +7,76 @@
 {% block section_body %}
     <h4><span class="heading">Detalle del encuentro</span></h4>
     <div class="row">
-        <div class="form-group col-sm-4" ng-class="{'has-error': errors.observation_type}">
-            <label class="control-label" for="observation_type">TIPO *</label>
-            <select id="observation_type" class="form-control" ng-model="patient.nationality">
+        <div class="form-group col-sm-3" ng-class="{'has-error': errors.type}">
+            <label class="control-label" for="type">TIPO *</label>
+            <select id="type" class="form-control" ng-model="interview.type">
                 {% for observation in observations %}
                     <option>{= observation =}</option>
                 {% endfor %}
             </select>
-            <uib-alert class="well-sm" ng-repeat="message in errors.nationality" type="danger">{{ message }}</uib-alert>
+            <uib-alert class="well-sm" ng-repeat="message in errors.type" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-4" ng-class="{'has-error': errors.birthdate}">
-            <label class="control-label" for="birthdate">FECHA *</label>
+        <div class="form-group col-sm-3" ng-class="{'has-error': errors.date}">
+            <label class="control-label" for="date">FECHA *</label>
             <div class="input-group">
-                <input id="date" class="form-control" type="text" ng-model="patient.date"
+                <input id="date" class="form-control" type="text" ng-model="interview.date"
                         uib-datepicker-popup="dd/MM/yyyy" datepicker-options="datePicker.options"
-                        is-open="datePicker.visibility.patient" current-text="Hoy" clear-text="Borrar" close-text="Cerrar"/>
+                        is-open="datePicker.visibility.interview" current-text="Hoy" clear-text="Borrar" close-text="Cerrar"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="datePicker.visibility.patient = true">
+                    <button class="btn btn-default" type="button" ng-click="datePicker.visibility.interview = true">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </button>
               </span>
             </div>
             <uib-alert class="well-sm" ng-repeat="message in errors.date" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-4" ng-class="{'has-error': errors.advisor}">
+        <div class="form-group col-sm-3" ng-class="{'has-error': errors.duration}">
+            <label class="control-label" for="duration">DURACIÓN *</label>
+            <select id="duration" class="form-control" ng-model="interview.duration">
+                <option></option>
+                <option value="5">5 min</option>
+                <option value="10">10 min</option>
+                <option value="15">15 min</option>
+                <option value="30">30 min</option>
+                <option value="45">45 min</option>
+                <option value="60">1 h</option>
+                <option value="75">1 h 15 min</option>
+                <option value="90">1 h 30 min</option>
+                <option value="105">1 h 45 min</option>
+                <option value="120">2 h</option>
+                <option value="150">2 h 30 min</option>
+                <option value="180">3 h</option>
+            </select>
+            <uib-alert class="well-sm" ng-repeat="message in errors.duration" type="danger">{{ message }}</uib-alert>
+        </div>
+        <div class="form-group col-sm-3" ng-class="{'has-error': errors.advisor}">
             <label class="control-label" for="advisor">ORIENTADORA</label>
             <div class="input-group" ng-show="!isAdvisorEditable">
-                <input id="advisor" class="form-control" type="text" disabled ng-model="patient.advisor.name"/>
+                <input id="advisor" class="form-control" type="text" disabled ng-model="interview.advisor.name"/>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" ng-click="editAdvisor()">
                         <i class="glyphicon glyphicon-pencil"></i>
                     </button>
                 </span>
             </div>
-            <select id="advisor" class="form-control" ng-model="patient.advisor" ng-show="isAdvisorEditable"
+            <select id="advisor" class="form-control" ng-model="interview.advisor" ng-show="isAdvisorEditable"
                     ng-options="advisor as advisor.name for advisor in advisors track by advisor.id">
                 <option></option>
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-4" ng-class="{'has-error': errors.coadvisor}">
-            <label class="control-label" for="advisor">CO-ORIENTADORA</label>
-            <div class="input-group" ng-show="!isAdvisorEditable">
-                <input id="advisor" class="form-control" type="text" disabled ng-model="patient.coadvisor.name"/>
+        <div class="form-group col-sm-3" ng-class="{'has-error': errors.coadvisor}">
+            <label class="control-label" for="coadvisor">CO-ORIENTADORA</label>
+            <div class="input-group" ng-show="!isCoadvisorEditable">
+                <input id="coadvisor" class="form-control" type="text" disabled ng-model="interview.coadvisor.name"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="editAdvisor()">
+                    <button class="btn btn-default" type="button" ng-click="editCoadvisor()">
                         <i class="glyphicon glyphicon-pencil"></i>
                     </button>
                 </span>
             </div>
-            <select id="advisor" class="form-control" ng-model="patient.advisor" ng-show="isAdvisorEditable"
-                    ng-options="advisor as advisor.name for advisor in advisors track by advisor.id">
+            <select id="coadvisor" class="form-control" ng-model="interview.coadvisor" ng-show="isCoadvisorEditable"
+                    ng-options="coadvisor as coadvisor.name for coadvisor in advisors track by coadvisor.id">
                 <option></option>
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.coadvisor" type="danger">{{ message }}</uib-alert>
@@ -75,17 +94,12 @@
 
 
 
-
+<!--
                 <div class="row">
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.firstname}">
                         <label class="control-label" for="firstname">NOMBRE *</label>
                         <input id="firstname" class="form-control" type="text" ng-model="patient.firstname" placeholder="Primer nombre"/>
                         <uib-alert class="well-sm" ng-repeat="message in errors.firstname" type="danger">{{ message }}</uib-alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.middlename}">
-                        <label class="control-label" for="middlename">&nbsp;</label>
-                        <input id="middlename" class="form-control" type="text" ng-model="patient.middlename" placeholder="Segundo nombre (Opcional)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.middlename" type="danger">{{ message }}</uib-alert>
                     </div>
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.surname}">
                         <label class="control-label" for="surname">&nbsp;</label>
@@ -93,7 +107,7 @@
                         <uib-alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{ message }}</uib-alert>
                     </div>
                 </div>
-
+-->
 
 
 

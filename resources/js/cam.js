@@ -258,7 +258,7 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
     }])
 
 
-    .controller("PatientViewInterviewController", ["$scope", function($scope) {
+    .controller("PatientViewInterviewController", ["$scope", "$http", function($scope, $http) {
         var interviewId = $scope.$stateParams.interviewId;
         if (interviewId < 1 || interviewId > $scope.interviews.length) {
             $scope.$state.go("^.summary");
@@ -266,4 +266,26 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         }
 
         $scope.setActiveTab(interviewId);
+        $scope.interview = $scope.interviews[interviewId - 1];
+        $scope.processing = false;
+        $scope.isAdvisorEditable = true;
+        $scope.isCoadvisorEditable = true;
+        $scope.datePicker = {
+            visibility: {},
+            options: {startingDay: 1, showWeeks: false, minDate: new Date(1900, 0, 1), maxDate: new Date()}
+        };
+        $scope.errors = {};
+
+        $scope.advisors = [];
+        $http.get("api/users/advisors").then(function(response) {$scope.advisors = response.data;});
+
+        $scope.editAdvisor = function() {
+            $scope.interview.advisor = null;
+            $scope.isAdvisorEditable = true;
+        };
+
+        $scope.editCoadvisor = function() {
+            $scope.interview.coadvisor = null;
+            $scope.isCoadvisorEditable = true;
+        };
     }]);
