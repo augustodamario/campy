@@ -7,7 +7,7 @@
 {% block section_body %}
     <h4><span class="heading">Detalle del encuentro</span></h4>
     <div class="row">
-        <div class="form-group col-sm-3" ng-class="{'has-error': errors.type}">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.type}">
             <label class="control-label" for="type">TIPO *</label>
             <select id="type" class="form-control" ng-model="interview.type">
                 {% for observation in observations %}
@@ -16,7 +16,7 @@
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.type" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-3" ng-class="{'has-error': errors.date}">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.date}">
             <label class="control-label" for="date">FECHA *</label>
             <div class="input-group">
                 <input id="date" class="form-control" type="text" ng-model="interview.date"
@@ -30,7 +30,7 @@
             </div>
             <uib-alert class="well-sm" ng-repeat="message in errors.date" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-3" ng-class="{'has-error': errors.duration}">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.duration}">
             <label class="control-label" for="duration">DURACIÓN *</label>
             <select id="duration" class="form-control" ng-model="interview.duration">
                 <option></option>
@@ -49,7 +49,9 @@
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.duration" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-3" ng-class="{'has-error': errors.advisor}">
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.advisor}">
             <label class="control-label" for="advisor">ORIENTADORA</label>
             <div class="input-group" ng-show="!isAdvisorEditable">
                 <input id="advisor" class="form-control" type="text" disabled ng-model="interview.advisor.name"/>
@@ -65,7 +67,7 @@
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{ message }}</uib-alert>
         </div>
-        <div class="form-group col-sm-3" ng-class="{'has-error': errors.coadvisor}">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.coadvisor}">
             <label class="control-label" for="coadvisor">CO-ORIENTADORA</label>
             <div class="input-group" ng-show="!isCoadvisorEditable">
                 <input id="coadvisor" class="form-control" type="text" disabled ng-model="interview.coadvisor.name"/>
@@ -81,13 +83,37 @@
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.coadvisor" type="danger">{{ message }}</uib-alert>
         </div>
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.channel}">
+            <label class="control-label" for="channel">SE ENTERÓ DEL CENTRO POR</label>
+            <select id="channel" class="form-control" ng-model="interview.channel">
+                <option></option>
+                <option value="5">Página de Facebook</option>
+                <option value="10">Publicidad de Google</option>
+                <option value="15">Otro</option>
+            </select>
+            <uib-alert class="well-sm" ng-repeat="message in errors.channel" type="danger">{{ message }}</uib-alert>
+        </div>
     </div>
-
-
-
-
-
-
+    <div class="row">
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.companion_relation}">
+            <label class="control-label" for="relation">ACOMPAÑANTE</label>
+            <input id="relation" class="form-control" type="text" ng-model="interview.companion_relation" placeholder="Relación / parentezco"/>
+            <uib-alert class="well-sm" ng-repeat="message in errors.companion_relation" type="danger">{{ message }}</uib-alert>
+        </div>
+        <div class="form-group col-sm-4" ng-class="{'has-error': errors.companion_name}">
+            <label class="control-label" for="companion_name">&nbsp;</label>
+            <input id="companion_name" class="form-control" type="text" ng-model="interview.companion_name" placeholder="Nombre y apellido"/>
+            <uib-alert class="well-sm" ng-repeat="message in errors.companion_name" type="danger">{{ message }}</uib-alert>
+        </div>
+    </div>
+    <h4><span class="heading">Motivo de consulta</span></h4>
+    <div class="form-group" ng-class="{'has-error': errors.motive}">
+        <textarea id="motive" class="form-control" rows="3" ng-model="interview.motive"></textarea>
+        <uib-alert class="well-sm" ng-repeat="message in errors.motive" type="danger">{{ message }}</uib-alert>
+    </div>
+    <h4><span class="heading">Embarazos</span></h4>
+    <h4><span class="heading sub">Actual</span></h4>
+    <h4><span class="heading sub">Historial</span></h4>
 
 
 
