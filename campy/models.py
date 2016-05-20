@@ -2,6 +2,7 @@
 from campy.utils import age
 from datetime import date
 from datetime import datetime
+from enum import Enum
 from google.appengine.ext.ndb import BooleanProperty
 from google.appengine.ext.ndb import DateProperty
 from google.appengine.ext.ndb import DateTimeProperty
@@ -415,10 +416,10 @@ class Patient(BaseModel):
 
 
 class Observation(BaseModel):
-    OBSERVATION_TYPES = [
-        u"Entrevista presencial",
-        u"Seguimiento telefónico"
-    ]
+    TYPES = {
+        "VISIT": u"Entrevista presencial",
+        "TELEPHONE": u"Seguimiento telefónico"
+    }
     PREGNANCY_CONFIRMATION_METHODS = [
         u"Análisis de sangre",
         u"Ecografía",
@@ -444,7 +445,7 @@ class Observation(BaseModel):
         u"Fumadora ocasional",
         u"Fumadora diaria"
     ]
-    type = StringProperty(required=True, choices=OBSERVATION_TYPES)
+    type = StringProperty(required=True, choices=TYPES.keys())
     date = DateProperty(required=True)
     companion_relationship = StringProperty()
     relative_firstname = StringProperty()

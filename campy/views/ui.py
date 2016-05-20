@@ -33,6 +33,6 @@ def templates(request):
     context = {
         "nationalities": NATIONALITIES,
         "provinces": PROVINCES,
-        "observations": Observation.OBSERVATION_TYPES
+        "observations": Observation.TYPES
     }
     return Response(render(request.matchdict["name"] + ".html", context, request=request))
