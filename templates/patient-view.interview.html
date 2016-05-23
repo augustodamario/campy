@@ -10,8 +10,8 @@
         <div class="form-group col-sm-4" ng-class="{'has-error': errors.type}">
             <label class="control-label" for="type">TIPO *</label>
             <select id="type" class="form-control" ng-model="interview.type">
-                {% for key in observations %}
-                    <option value="{= key =}">{= observations[key] =}</option>
+                {% for key in Observation.TYPES %}
+                    <option value="{= key =}">{= Observation.TYPES[key] =}</option>
                 {% endfor %}
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.type" type="danger">{{ message }}</uib-alert>
@@ -33,37 +33,26 @@
         <div class="form-group col-sm-4" ng-class="{'has-error': errors.duration}">
             <label class="control-label" for="duration">DURACIÓN *</label>
             <select id="duration" class="form-control" ng-model="interview.duration">
-                <option></option>
-                <option value="5">5 min</option>
-                <option value="10">10 min</option>
-                <option value="15">15 min</option>
-                <option value="30">30 min</option>
-                <option value="45">45 min</option>
-                <option value="60">1 h</option>
-                <option value="75">1 h 15 min</option>
-                <option value="90">1 h 30 min</option>
-                <option value="105">1 h 45 min</option>
-                <option value="120">2 h</option>
-                <option value="150">2 h 30 min</option>
-                <option value="180">3 h</option>
+                {% for key in Observation.DURATIONS %}
+                    <option value="{= key =}">{= Observation.DURATIONS[key] =}</option>
+                {% endfor %}
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.duration" type="danger">{{ message }}</uib-alert>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-4" ng-class="{'has-error': errors.advisor}">
-            <label class="control-label" for="advisor">ORIENTADORA</label>
+            <label class="control-label" for="advisor">ORIENTADORA *</label>
             <div class="input-group" ng-show="!isAdvisorEditable">
                 <input id="advisor" class="form-control" type="text" disabled ng-model="interview.advisor.name"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="editAdvisor()">
+                    <button class="btn btn-default" type="button" ng-click="isAdvisorEditable = true">
                         <i class="glyphicon glyphicon-pencil"></i>
                     </button>
                 </span>
             </div>
             <select id="advisor" class="form-control" ng-model="interview.advisor" ng-show="isAdvisorEditable"
                     ng-options="advisor as advisor.name for advisor in advisors track by advisor.id">
-                <option></option>
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.advisor" type="danger">{{ message }}</uib-alert>
         </div>
@@ -72,13 +61,13 @@
             <div class="input-group" ng-show="!isCoadvisorEditable">
                 <input id="coadvisor" class="form-control" type="text" disabled ng-model="interview.coadvisor.name"/>
                 <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" ng-click="editCoadvisor()">
+                    <button class="btn btn-default" type="button" ng-click="isCoadvisorEditable = true">
                         <i class="glyphicon glyphicon-pencil"></i>
                     </button>
                 </span>
             </div>
             <select id="coadvisor" class="form-control" ng-model="interview.coadvisor" ng-show="isCoadvisorEditable"
-                    ng-options="coadvisor as coadvisor.name for coadvisor in advisors track by coadvisor.id">
+                    ng-options="coadvisor as coadvisor.name for coadvisor in (advisors | filter:{id:'!' + interview.advisor.id}) track by coadvisor.id">
                 <option></option>
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.coadvisor" type="danger">{{ message }}</uib-alert>
@@ -87,17 +76,17 @@
             <label class="control-label" for="channel">SE ENTERÓ DEL CENTRO POR</label>
             <select id="channel" class="form-control" ng-model="interview.channel">
                 <option></option>
-                <option value="5">Página de Facebook</option>
-                <option value="10">Publicidad de Google</option>
-                <option value="15">Otro</option>
+                {% for key in Observation.CHANNELS %}
+                    <option value="{= key =}">{= Observation.CHANNELS[key] =}</option>
+                {% endfor %}
             </select>
             <uib-alert class="well-sm" ng-repeat="message in errors.channel" type="danger">{{ message }}</uib-alert>
         </div>
     </div>
     <div class="row" ng-show="interview.type == 'VISIT'">
         <div class="form-group col-sm-4" ng-class="{'has-error': errors.companion_relation}">
-            <label class="control-label" for="relation">ACOMPAÑANTE</label>
-            <input id="relation" class="form-control" type="text" ng-model="interview.companion_relation" placeholder="Relación / parentezco"/>
+            <label class="control-label" for="companion_relation">ACOMPAÑANTE</label>
+            <input id="companion_relation" class="form-control" type="text" ng-model="interview.companion_relation" placeholder="Relación / parentezco"/>
             <uib-alert class="well-sm" ng-repeat="message in errors.companion_relation" type="danger">{{ message }}</uib-alert>
         </div>
         <div class="form-group col-sm-4" ng-class="{'has-error': errors.companion_name}">
@@ -106,12 +95,12 @@
             <uib-alert class="well-sm" ng-repeat="message in errors.companion_name" type="danger">{{ message }}</uib-alert>
         </div>
     </div>
-    <h4><span class="heading">Motivo de consulta</span></h4>
+    <h4><span class="heading">{{ interview.type != "TELEPHONE"? "Motivo de consulta": "Seguimiento" }} *</span></h4>
     <div class="form-group" ng-class="{'has-error': errors.motive}">
         <textarea id="motive" class="form-control" rows="3" ng-model="interview.motive"></textarea>
         <uib-alert class="well-sm" ng-repeat="message in errors.motive" type="danger">{{ message }}</uib-alert>
     </div>
-    <h4><span class="heading">Evaluación</span></h4>
+    <h4><span class="heading">Evaluación *</span></h4>
     <div class="form-group" ng-class="{'has-error': errors.evaluation}">
         <textarea id="evaluation" class="form-control" rows="3" ng-model="interview.evaluation"></textarea>
         <uib-alert class="well-sm" ng-repeat="message in errors.evaluation" type="danger">{{ message }}</uib-alert>
@@ -119,27 +108,6 @@
     <h4><span class="heading">Embarazos</span></h4>
     <h4><span class="heading sub">Actual</span></h4>
     <h4><span class="heading sub">Historial</span></h4>
-
-
-
-
-
-
-<!--
-                <div class="row">
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.firstname}">
-                        <label class="control-label" for="firstname">NOMBRE *</label>
-                        <input id="firstname" class="form-control" type="text" ng-model="patient.firstname" placeholder="Primer nombre"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.firstname" type="danger">{{ message }}</uib-alert>
-                    </div>
-                    <div class="form-group col-sm-4" ng-class="{'has-error': errors.surname}">
-                        <label class="control-label" for="surname">&nbsp;</label>
-                        <input id="surname" class="form-control" type="text" ng-model="patient.surname" placeholder="Apellido (Opcional)"/>
-                        <uib-alert class="well-sm" ng-repeat="message in errors.surname" type="danger">{{ message }}</uib-alert>
-                    </div>
-                </div>
--->
-
-
-
+    <h4><span class="heading">Estilo de vida</span></h4>
+    <h4><span class="heading">Riesgos para el embarazo</span></h4>
 {% endblock %}

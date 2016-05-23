@@ -236,7 +236,10 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
 
         $scope.interviews = [];
         $scope.newInterview = function() {
-            $scope.interviews.push({});
+            $scope.interviews.push({
+                type: "VISIT",
+                date: new Date()
+            });
             $scope.setActiveTab($scope.interviews.length);
         };
 
@@ -277,15 +280,5 @@ angular.module("cam", ["ui.router", "ui.bootstrap",  "angular-loading-bar", "ui.
         $scope.errors = {};
 
         $scope.advisors = [];
-        $http.get("api/users/advisors").then(function(response) {$scope.advisors = response.data;});
-
-        $scope.editAdvisor = function() {
-            $scope.interview.advisor = null;
-            $scope.isAdvisorEditable = true;
-        };
-
-        $scope.editCoadvisor = function() {
-            $scope.interview.coadvisor = null;
-            $scope.isCoadvisorEditable = true;
-        };
+        $http.get("api/users/advisors").then(function(response) { $scope.coadvisors = response.data; });
     }]);

@@ -1,8 +1,8 @@
 # coding: utf-8
 from campy.utils import age
+from collections import OrderedDict
 from datetime import date
 from datetime import datetime
-from enum import Enum
 from google.appengine.ext.ndb import BooleanProperty
 from google.appengine.ext.ndb import DateProperty
 from google.appengine.ext.ndb import DateTimeProperty
@@ -416,10 +416,30 @@ class Patient(BaseModel):
 
 
 class Observation(BaseModel):
-    TYPES = {
-        "VISIT": u"Entrevista presencial",
-        "TELEPHONE": u"Seguimiento telefónico"
-    }
+    TYPES = OrderedDict([
+        ("VISIT", u"Entrevista presencial"),
+        ("TELEPHONE", u"Seguimiento telefónico")
+    ])
+    DURATIONS = OrderedDict([
+        (5, "5 min"),
+        (10, "10 min"),
+        (15, "15 min"),
+        (30, "30 min"),
+        (45, "45 min"),
+        (60, "1 h"),
+        (75, "1 h 15 min"),
+        (90, "1 h 30 min"),
+        (105, "1 h 45 min"),
+        (120, "2 h"),
+        (150, "2 h 30 min"),
+        (180, "3 h")
+    ])
+    CHANNELS = OrderedDict([
+        ("GOOGLE", u"Anuncio en Internet"),
+        ("STREET", u"Publicidad callejera"),
+        ("COMMENT", u"Recomendación de otra persona"),
+        ("OTHER", u"Otro")
+    ])
     PREGNANCY_CONFIRMATION_METHODS = [
         u"Análisis de sangre",
         u"Ecografía",

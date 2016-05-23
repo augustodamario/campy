@@ -86,7 +86,7 @@
                     <div class="form-group col-sm-4" ng-class="{'has-error': errors.nationality}">
                         <label class="control-label" for="nationality">NACIONALIDAD *</label>
                         <select id="nationality" class="form-control" ng-model="patient.nationality">
-                            {% for nationality in nationalities %}
+                            {% for nationality in NATIONALITIES %}
                                 <option>{= nationality =}</option>
                             {% endfor %}
                         </select>
@@ -150,7 +150,7 @@
                         <label class="control-label" for="province">DIRECCION</label>
                         <select id="province" class="form-control" ng-model="patient.province">
                             <option></option>
-                            {% for province in provinces %}
+                            {% for province in PROVINCES %}
                                 <option>{= province =}</option>
                             {% endfor %}
                         </select>

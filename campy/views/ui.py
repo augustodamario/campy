@@ -27,12 +27,14 @@ def home(request):
     return {}
 
 
+_templates_context = {
+    "NATIONALITIES": NATIONALITIES,
+    "PROVINCES": PROVINCES,
+    "Observation": Observation
+}
+
+
 @view_config(route_name="templates")
 @require_any_role
 def templates(request):
-    context = {
-        "nationalities": NATIONALITIES,
-        "provinces": PROVINCES,
-        "observations": Observation.TYPES
-    }
-    return Response(render(request.matchdict["name"] + ".html", context, request=request))
+    return Response(render(request.matchdict["name"] + ".html", _templates_context, request=request))
