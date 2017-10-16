@@ -9,24 +9,24 @@
    > https://cloud.google.com/appengine/downloads
 
 3. Dependencies: run
-   > `python -m pip install -r @docs/requirements.txt -t lib`
+   > `python -m pip install -r @docs/requirements.txt -t src/lib`
 
    and delete these files and folders
    ```
-   /lib/*-info
-   /lib/_markerlib
-   /lib/easy_install.py
-   /lib/markupsafe/tests.py
-   /lib/pyramid/tests
-   /lib/pyramid_jinja2/demo/tests.py
-   /lib/pyramid_jinja2/tests
-   /lib/repoze/lru/tests.py
-   /lib/setuptools
-   /lib/translationstring/tests
-   /lib/venusian/tests
-   /lib/zope/deprecation/tests.py
-   /lib/zope/interface/common/tests
-   /lib/zope/interface/tests
+   /src/lib/*-info
+   /src/lib/_markerlib
+   /src/lib/easy_install.py
+   /src/lib/markupsafe/tests.py
+   /src/lib/pyramid/tests
+   /src/lib/pyramid_jinja2/demo/tests.py
+   /src/lib/pyramid_jinja2/tests
+   /src/lib/repoze/lru/tests.py
+   /src/lib/setuptools
+   /src/lib/translationstring/tests
+   /src/lib/venusian/tests
+   /src/lib/zope/deprecation/tests.py
+   /src/lib/zope/interface/common/tests
+   /src/lib/zope/interface/tests
    ```
 
 ## Sass
@@ -38,4 +38,4 @@
    > `gem install sass`
 
 3. Compile automatically: run
-   > `sass --style=compressed --sourcemap=none --nocache --watch resources/css/main.scss:resources/css/main.min.css`
+   > `sass --style=compressed --sourcemap=none --nocache --watch src/resources/css/main.scss:src/resources/css/main.min.css`
